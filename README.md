@@ -1,4 +1,3 @@
-dvncmd
-======
+# Divine Comedy link shortener
 
-Divine Comedy link shortener - dvncmd.tk
+More will come.
