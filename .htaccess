@@ -19,5 +19,5 @@
 
 DirectoryIndex divcom.php
 RewriteEngine on
-RewriteRule ^([\w\-]{2,6})\/([ipd][0-9].+)$ divcom.php?q=$2&lang=$1 [L]
-RewriteRule ^([ipd][0-9].+)$ divcom.php?q=$1 [L]
+RewriteRule ^([\w\-]{2,6})\/([ipd][0-9].+)$ home.php?q=$2&lang=$1 [L]
+RewriteRule ^([ipd][0-9].+)$ home.php?q=$1 [L]
