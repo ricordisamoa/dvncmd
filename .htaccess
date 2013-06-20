@@ -17,7 +17,7 @@
 # 
 # The license file can be found at COPYING.txt (in this directory).
 
-DirectoryIndex divcom.php
+DirectoryIndex home.php
 RewriteEngine on
 RewriteRule ^([\w\-]{2,6})\/([ipd][0-9].+)$ home.php?q=$2&lang=$1 [L]
 RewriteRule ^([ipd][0-9].+)$ home.php?q=$1 [L]
