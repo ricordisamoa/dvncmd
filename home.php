@@ -25,7 +25,7 @@ The license file can be found at COPYING.txt (in this directory).
 <title>Divine Comedy link shortener - dvncmd.tk</title>
 <base target="_blank">
 <link href="//fonts.googleapis.com/css?family=IM+Fell+DW+Pica:400,400italic" rel="stylesheet" type="text/css">
-<link href="common.css" rel="stylesheet" type="text/css">
+<link href="/common.css" rel="stylesheet" type="text/css">
 <link href="//upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Dante_icon.png/32px-Dante_icon.png" rel="shortcut icon" type="image/png">
 </head>
 <body>
