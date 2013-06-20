@@ -96,15 +96,22 @@ foreach($languages_query as $language){
 
 $langlinks=json_decode(file_get_contents('http://it.wikisource.org/w/api.php?action=query&prop=langlinks&format=json&lllimit=max&titles='.$pagetitle),true)['query']['pages'];
 $langlinks=$langlinks[array_keys($langlinks)[0]]['langlinks'];
+array_push($langlinks,['lang'=>'it','*'=>$pagetitle]);
+foreach($langlinks as $index=>$langlink){
+	if($langlink['lang']==$userlang) $pagetitle=str_replace(' ','_',$langlink['*']);
+	if($langlink['lang']=='fr' or $langlink['lang']==$userlang) unset($langlinks[$index]);# do not show French for now
+}
+function compare_langlinks($l1,$l2){
+	return strcmp($l1['lang'],$l2['lang']);
+}
+$langlinks=array_values($langlinks);# re-index array
+usort($langlinks,'compare_langlinks');# sort by language code
 echo '<div style="position:fixed;margin-top:100px;right:.5em;float:right">';
 foreach($langlinks as $index=>$langlink){
-	if($langlink['lang']!='fr'){
-		echo '<a target="_self" href="/'.$langlink['lang'].'/'.$_GET['q'].'" title="'.$languages[$langlink['lang']].'">';
-		if($flags[$langlink['lang']]) echo '<img height="70" src="http://commons.wikimedia.org/wiki/Special:Filepath/'.str_replace(' ','_',$flags[$langlink['lang']]).'" alt="'.$languages[$langlink['lang']].'">';
-		else echo $languages[$langlink['lang']];
-		echo '</a><br>';
-		if($userlang!='it' and $userlang==$langlink['lang']) $pagetitle=str_replace(' ','_',$langlink['*']);
-	}
+	echo '<a target="_self" href="/'.$langlink['lang'].'/'.$_GET['q'].'" title="'.$languages[$langlink['lang']].'">';
+	if($flags[$langlink['lang']]) echo '<img height="70" src="http://commons.wikimedia.org/wiki/Special:Filepath/'.str_replace(' ','_',$flags[$langlink['lang']]).'" alt="'.$languages[$langlink['lang']].'">';
+	else echo $languages[$langlink['lang']];
+	echo '</a><br>';
 	if($index==intval(count($langlinks)/2)) echo '</div><div style="position:fixed;left:.5em;float:left">';
 }
 echo '</div>';
