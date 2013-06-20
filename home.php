@@ -96,7 +96,7 @@ foreach($languages_query as $language){
 
 $langlinks=json_decode(file_get_contents('http://it.wikisource.org/w/api.php?action=query&prop=langlinks&format=json&lllimit=max&titles='.$pagetitle),true)['query']['pages'];
 $langlinks=$langlinks[array_keys($langlinks)[0]]['langlinks'];
-echo '<div style="position:fixed;right:.5em;float:right">';
+echo '<div style="position:fixed;margin-top:100px;right:.5em;float:right">';
 foreach($langlinks as $index=>$langlink){
 	if($langlink['lang']!='fr'){
 		echo '<a target="_self" href="/'.$langlink['lang'].'/'.$_GET['q'].'" title="'.$languages[$langlink['lang']].'">';
@@ -185,5 +185,6 @@ $content=array_slice($content,intval($versi[0])-1,intval($versi[1])-intval($vers
 # ...print them
 echo '<section><h2>',$cantica_name,', canto ',$canto,', vers',(count($content)==1?'o '.$versi[0]:'i '.implode($versi,'-')),'</h2><blockquote>',implode($content,'<br>'),'</blockquote><small>Text from <a href="http://',$userlang,'.wikisource.org/wiki/',$pagetitle,'">Wikisource</a></small></section>';
 ?>
+<a href="https://github.com/ricordisamoa/dvncmd"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 </body>
 </html>
