@@ -108,7 +108,7 @@ $langlinks=array_values($langlinks);# re-index array
 usort($langlinks,'compare_langlinks');# sort by language code
 echo '<div style="position:fixed;margin-top:100px;right:.5em;float:right">';
 foreach($langlinks as $index=>$langlink){
-	echo '<a target="_self" href="/'.$langlink['lang'].'/'.$_GET['q'].'" title="'.$languages[$langlink['lang']].'">';
+	echo '<a target="_self" href="'.($langlink['lang']=='it'?'':('/'.$langlink['lang'])).'/'.$_GET['q'].'" title="'.$languages[$langlink['lang']].'">';
 	if($flags[$langlink['lang']]) echo '<img height="70" src="http://commons.wikimedia.org/wiki/Special:Filepath/'.str_replace(' ','_',$flags[$langlink['lang']]).'" alt="'.$languages[$langlink['lang']].'">';
 	else echo $languages[$langlink['lang']];
 	echo '</a><br>';
@@ -142,17 +142,17 @@ else echo $titles['en'];
 </header>
 <?php
 
-/* get the raw wikicode */
+# get the raw wikicode
 $content_url='http://'.$userlang.'.wikisource.org/w/index.php?title='.$pagetitle.'&action=raw';
 $content=file_get_contents($content_url);
 
-/* get only text in "<poem>" tags */
+# get only text in "<poem>" tags
 $content=preg_replace('/(^[\s\S]*<poem>[\s\n\r]*|[\s\n\r]*<\/poem>[\s\S]*$)/','',$content);
 
-/* remove images (TODO: expect any possible ns-6 alias) */
+# remove images (TODO: expect any possible ns-6 alias)
 $content=preg_replace('/\[\[\:?([Ff]ile|[Ii]mat?ge|[Ii]mmagine)\:[^\[\]]+(\[\[[^\[\]]+\]\][^\[\]]+)*\]\]\n/','',$content);
 
-/* other languages */
+# other languages
 $content=preg_replace('/^[\s\S]*<div class="verse"><pre>\s+/','',$content);
 $content=preg_replace('/\s+<\/pre><\/div>[\s\S]*$/','',$content);
 
