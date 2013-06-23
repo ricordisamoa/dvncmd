@@ -61,9 +61,9 @@ $(document).ready(function(){
 	versi=", versi "+versInit+"-"+versEnd;
 	var pageTitle="Divina Commedia/"+cantica+"/Canto "+romanize(canto);
 	$("section").last().children("h2").first().text(cantica+", canto "+canto+versi);
-	$("section").last().find("a").first().attr("href","http://it.wikisource.org/wiki/"+pageTitle);
+	$("section").last().find("a").first().attr("href","//it.wikisource.org/wiki/"+pageTitle);
 	$.get(
-		"http://it.wikisource.org/w/api.php",
+		"//it.wikisource.org/w/api.php",
 		{
 			action:"query",
 			format:"json",
@@ -93,7 +93,7 @@ $(document).ready(function(){
 		"jsonp"
 	);
 	$.get(
-		"http://commons.wikimedia.org/w/api.php",
+		"//commons.wikimedia.org/w/api.php",
 		{
 			action:"query",
 			format:"json",
