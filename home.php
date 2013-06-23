@@ -51,7 +51,6 @@ function romanize($num){
 $query=$_GET['q'];
 $parts=explode(',',$query);
 $cantica=substr($parts[0],0,1);
-$cantica_name='';
 if($cantica=='i') $cantica_name='Inferno';
 else if($cantica=='p') $cantica_name='Purgatorio';
 else if($cantica=='d') $cantica_name='Paradiso';
@@ -191,6 +190,23 @@ $content=array_slice($content,intval($versi[0])-1,intval($versi[1])-intval($vers
 
 # ...print them
 echo '<section><h2>',$cantica_name,', canto ',$canto,', vers',(count($content)==1?'o '.$versi[0]:'i '.implode($versi,'-')),'</h2><blockquote>',implode($content,'<br>'),'</blockquote><small>Text from <a href="http://',$userlang,'.wikisource.org/wiki/',$pagetitle,'">Wikisource</a></small></section>';
+
+$images=http_build_query([
+	action=>'query',
+	format=>'json',
+	prop=>'imageinfo',
+	iiprop=>'url',
+	iiurlwidth=>1600,
+	iiurlheight=>160,
+	generator=>'categorymembers',
+	gcmtitle=>'Category:'.$cantica_name.' Canto '.str_pad($canto,2,'0',STR_PAD_LEFT),
+	gcmtype=>'file'
+]);
+$images=json_decode(file_get_contents('http://commons.wikimedia.org/w/api.php?'.$images),true)['query']['pages'];
+foreach($images as $pageid=>$page){
+	$ii=$page['imageinfo'][0];
+	echo '<a href="'.$ii['descriptionurl'].'"><img src="'.$ii['thumburl'].'"></a>';
+}
 ?>
 <a href="https://github.com/ricordisamoa/dvncmd"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 </body>
