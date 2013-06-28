@@ -116,7 +116,6 @@ foreach($langlinks as $index=>$langlink){
 echo '</div>';
 ?>
 <header>
-<hgroup>
 <h1><?php
 $titles=[
 	'ca'=>'La Divina Comèdia',
@@ -137,7 +136,6 @@ if($titles[$userlang]) echo $titles[$userlang];
 else echo $titles['en'];
 ?></h1>
 <h2>link shortener</h2>
-</hgroup>
 </header>
 <?php
 
