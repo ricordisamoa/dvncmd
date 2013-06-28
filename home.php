@@ -204,7 +204,7 @@ $images=json_decode(file_get_contents('http://commons.wikimedia.org/w/api.php?'.
 if($images['pages']){
 	foreach($images['pages'] as $pageid=>$page){
 		$ii=$page['imageinfo'][0];
-		echo '<a href="'.$ii['descriptionurl'].'"><img src="'.$ii['thumburl'].'"></a>';
+		echo '<a href="'.$ii['descriptionurl'].'"><img alt="'.$page['title'].'" src="'.$ii['thumburl'].'"></a>';
 	}
 }
 ?>

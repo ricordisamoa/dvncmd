@@ -109,9 +109,12 @@ $(document).ready(function(){
 			$.each(data.query.pages,function(pageid,page){
 				var ii=page.imageinfo[0];
 				$("<img>")
-				.attr("src",ii.thumburl)
-				.appendTo("<a>")
-				.parent().attr("href",ii.descriptionurl)
+				.attr({
+					src:ii.thumburl,
+					alt:page.title
+				})
+				.wrap("<a>").parent()
+				.attr("href",ii.descriptionurl)
 				.appendTo(document.body);
 			});
 		},
