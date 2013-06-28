@@ -202,10 +202,12 @@ $images=http_build_query([
 	gcmtitle=>'Category:'.$cantica_name.' Canto '.str_pad($canto,2,'0',STR_PAD_LEFT),
 	gcmtype=>'file'
 ]);
-$images=json_decode(file_get_contents('http://commons.wikimedia.org/w/api.php?'.$images),true)['query']['pages'];
-foreach($images as $pageid=>$page){
-	$ii=$page['imageinfo'][0];
-	echo '<a href="'.$ii['descriptionurl'].'"><img src="'.$ii['thumburl'].'"></a>';
+$images=json_decode(file_get_contents('http://commons.wikimedia.org/w/api.php?'.$images),true)['query'];
+if($images['pages']){
+	foreach($images['pages'] as $pageid=>$page){
+		$ii=$page['imageinfo'][0];
+		echo '<a href="'.$ii['descriptionurl'].'"><img src="'.$ii['thumburl'].'"></a>';
+	}
 }
 ?>
 <a href="https://github.com/ricordisamoa/dvncmd"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
