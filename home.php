@@ -88,12 +88,25 @@ $flags=[
 ];
 
 $languages=[];
-$languages_query=json_decode(file_get_contents('http://it.wikisource.org/w/api.php?action=query&meta=siteinfo&siprop=languages&format=json'),true)['query']['languages'];
+$languages_query=http_build_query([
+	action=>'query',
+	meta=>'siteinfo',
+	siprop=>'languages',
+	format=>'json'
+]);
+$languages_query=json_decode(file_get_contents('http://it.wikisource.org/w/api.php?'.$languages_query),true)['query']['languages'];
 foreach($languages_query as $language){
 	$languages[$language['code']]=$language['*'];
 }
 
-$langlinks=json_decode(file_get_contents('http://it.wikisource.org/w/api.php?action=query&prop=langlinks&format=json&lllimit=max&titles='.$pagetitle),true)['query']['pages'];
+$langlinks=http_build_query([
+	action=>'query',
+	prop=>'langlinks',
+	format=>'json',
+	lllimit=>'max',
+	titles=>$pagetitle
+]);
+$langlinks=json_decode(file_get_contents('http://it.wikisource.org/w/api.php?'.$langlinks),true)['query']['pages'];
 $langlinks=$langlinks[array_keys($langlinks)[0]]['langlinks'];
 array_push($langlinks,['lang'=>'it','*'=>$pagetitle]);
 foreach($langlinks as $index=>$langlink){
@@ -118,19 +131,19 @@ echo '</div>';
 <header>
 <h1><?php
 $titles=[
-	'ca'=>'La Divina Comèdia',
-	'cs'=>'Božská komedie',
-	'en'=>'Divine Comedy',
-	'es'=>'La Divina Comedia',
-	'fi'=>'Jumalaisesta näytelmästä',
-	'fr'=>'La Divine Comédie',
-	'it'=>'Divina Commedia',
-	'la'=>'Divina Comoedia',
-	'pl'=>'Boska Komedia',
-	'pt'=>'A Divina Comédia',
-	'ro'=>'Divina Comedie',
-	'ru'=>'Божественная комедия',
-	'sl'=>'Božanska komedija'
+	ca=>'La Divina Comèdia',
+	cs=>'Božská komedie',
+	en=>'Divine Comedy',
+	es=>'La Divina Comedia',
+	fi=>'Jumalaisesta näytelmästä',
+	fr=>'La Divine Comédie',
+	it=>'Divina Commedia',
+	la=>'Divina Comoedia',
+	pl=>'Boska Komedia',
+	pt=>'A Divina Comédia',
+	ro=>'Divina Comedie',
+	ru=>'Божественная комедия',
+	sl=>'Božanska komedija'
 ];
 if($titles[$userlang]) echo $titles[$userlang];
 else echo $titles['en'];
