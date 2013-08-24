@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app>
 <!--
 Divine Comedy link shortener - dvncmd.tk
 
@@ -27,9 +27,13 @@ The license file can be found at COPYING.txt (in this directory).
 <link href="//fonts.googleapis.com/css?family=IM+Fell+DW+Pica:400,400italic" rel="stylesheet" type="text/css">
 <link href="/common.css" rel="stylesheet" type="text/css">
 <link href="//upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Dante_icon.png/32px-Dante_icon.png" rel="shortcut icon" type="image/png">
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
 </head>
 <body>
 <?php
+
+if(array_key_exists('q',$_GET)){
+
 $userlang='it';
 if($_GET['lang'] and $_GET['lang']!='' and $_GET['lang']!=$userlang) $userlang=$_GET['lang'];
 function romanize($num){
@@ -121,12 +125,14 @@ usort($langlinks,'compare_langlinks');# sort by language code
 echo '<div style="position:fixed;margin-top:100px;right:.5em;float:right">';
 foreach($langlinks as $index=>$langlink){
 	echo '<a target="_self" href="'.($langlink['lang']=='it'?'':('/'.$langlink['lang'])).'/'.$_GET['q'].'" title="'.$languages[$langlink['lang']].'">';
-	if($flags[$langlink['lang']]) echo '<img height="70" src="http://commons.wikimedia.org/wiki/Special:Filepath/'.str_replace(' ','_',$flags[$langlink['lang']]).'" alt="'.$languages[$langlink['lang']].'">';
+	if($flags[$langlink['lang']]) echo '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/'.str_replace(' ','_',$flags[$langlink['lang']]).'" alt="'.$languages[$langlink['lang']].'">';
 	else echo $languages[$langlink['lang']];
 	echo '</a><br>';
 	if($index==intval(count($langlinks)/2)) echo '</div><div style="position:fixed;left:.5em;float:left">';
 }
 echo '</div>';
+
+}
 ?>
 <header>
 <h1><?php
@@ -151,6 +157,8 @@ else echo $titles['en'];
 <h2>link shortener</h2>
 </header>
 <?php
+
+if(array_key_exists('q',$_GET)){
 
 # get the raw wikicode
 $content_url='http://'.$userlang.'.wikisource.org/w/index.php?title='.$pagetitle.'&action=raw';
@@ -220,7 +228,42 @@ if($images['pages']){
 		echo '<a href="'.$ii['descriptionurl'].'"><img alt="'.$page['title'].'" src="'.$ii['thumburl'].'"></a>';
 	}
 }
+echo '<!--';
+}
 ?>
-<a href="https://github.com/ricordisamoa/dvncmd"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+
+<section>
+<h2>Type a Divine Comedy Reference</h2>
+<form oninput="genera()">
+<table>
+<tr>
+<td><label>Cantica:<br>
+<select id="cantica" ng-model="cantica">
+<option value="i" selected>Inferno</option>
+<option value="p">Purgatorio</option>
+<option value="d">Paradiso</option>
+</select></label></td>
+<td><label>Canto:<br>
+<input type="number" id="canto" ng-model="canto" min="1" max="34" value="1"></label></td>
+<td><label>Lines:<br>
+<input type="text" id="versi" ng-model="versi" placeholder="1-6" pattern="^\d+(\-\d+)?$"></label></td>
+<td><label>Language code:<br>
+<input type="text" id="lang" ng-model="lang" value="it"></label></td>
+</tr>
+</table>
+</form>
+</section>
+
+<section>
+<h2>Get a Universal Link</h2>
+<a id="divcom-url" target="_blank" href="{{lang!='it'&&lang!=''&&lang!=null?lang+'/':''}}{{cantica}}{{canto}},{{versi}}">http://dvncmd.tk/<span id="divcom-lang">{{lang!='it'&&lang!=''&&lang!=null?lang+'/':''}}</span><span id="divcom-cantica">{{cantica}}</span><span id="divcom-canto">{{canto}}</span>,<span id="divcom-versi">{{versi}}</span></a>
+<div id="bibly-links">
+<a id="divcom-url-copy">Copy</a>
+<a id="divcom-url-twitter" target="_blank" href="http://twitter.com/?message=Read%20http://dvncmd.tk?i1,1-3">Twitter</a>
+<a id="divcom-url-facebook" target="_blank" href="http://www.facebook.com/connect/prompt_feed.php?&amp;message=Read%20http://dvncmd.tk?i1,1-3">Facebook</a>		
+</div>
+</section>
+<?php if(array_key_exists('q',$_GET)) echo '-->'; ?>
+<a href="https://github.com/ricordisamoa/dvncmd"><img style="position: fixed; top: 0; right: 0; border: 0;" src="//s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 </body>
 </html>
