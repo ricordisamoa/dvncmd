@@ -165,17 +165,17 @@ $content_url='http://'.$userlang.'.wikisource.org/w/index.php?title='.$pagetitle
 $content=file_get_contents($content_url);
 
 # get only text in "<poem>" tags
-$content=preg_replace('/(^[\s\S]*<poem>[\s\n\r]*|[\s\n\r]*<\/poem>[\s\S]*$)/','',$content);
+$content=preg_replace('/(^[\s\S]*<poem>[\s\n\r]*|[\s\n\r]*<\/poem>[\s\S]*$)/i','',$content);
 
 # remove images (TODO: expect any possible ns-6 alias)
 $content=preg_replace('/\[\[\:?([Ff]ile|[Ii]mat?ge|[Ii]mmagine)\:[^\[\]]+(\[\[[^\[\]]+\]\][^\[\]]+)*\]\]\n/','',$content);
 
 # other languages
-$content=preg_replace('/^[\s\S]*<div class="verse"><pre>\s+/','',$content);
-$content=preg_replace('/\s+<\/pre><\/div>[\s\S]*$/','',$content);
+$content=preg_replace('/^[\s\S]*<div class="verse"><pre>\s+/i','',$content);
+$content=preg_replace('/\s+<\/pre><\/div>[\s\S]*$/i','',$content);
 
 # remove <ref> tags
-$content=preg_replace('/<ref[\s\w]*(\/|>[^<>]*<\/ref)>/','',$content);
+$content=preg_replace('/<ref[\s\w]*(\/|>[^<>]*<\/ref)>/i','',$content);
 
 # remove indentations at line beginning
 $content=preg_replace('/^[:\d\s\']*/m','',$content);
