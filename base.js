@@ -19,18 +19,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 The license file can be found at COPYING.txt (in this directory).
 */
 $(document).ready(function(){
-	if(!location.search&&!location.pathname) return;
-	var query=decodeURIComponent((location.search&&location.search.trim()!=""?location.search:location.pathname).substr(1));
-	var reg=query.match(/^(i(0?[1-9]|[0-2][0-9]|3[0-4])|(p|d)(0?[1-9]|[12][0-9]|3[0-3]))(\,[0-9]{1,3}(\-[0-9]{1,3})?)?$/i);
-	if(reg==null) return;
-	var cantica=null;
-	switch(query.substr(0,1).toLowerCase()){
-		case "i":cantica="Inferno";break;
-		case "p":cantica="Purgatorio";break;
-		case "d":cantica="Paradiso";break;
+	if(!location.search && !location.pathname){
+		return;
 	}
-	if(cantica==null) return;
-	var romanize=function(num){
+	var query = decodeURIComponent((location.search && location.search.trim() != "" ? location.search : location.pathname).substr(1)),
+	reg = query.match(/^(i(0?[1-9]|[0-2][0-9]|3[0-4])|(p|d)(0?[1-9]|[12][0-9]|3[0-3]))(\,[0-9]{1,3}(\-[0-9]{1,3})?)?$/i);
+	if(reg === null){
+		return;
+	}
+	var cantica = null;
+	switch(query.substr(0, 1).toLowerCase()){
+		case "i": cantica = "Inferno"; break;
+		case "p": cantica = "Purgatorio"; break;
+		case "d": cantica = "Paradiso"; break;
+	}
+	if(cantica === null){
+		return;
+	}
+	var romanize = function(num){
 		// taken from http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter
 		// by Steven Levithan, released under the MIT License
 		var	digits=String(+num).split(""),
@@ -41,25 +47,25 @@ $(document).ready(function(){
 		i=3;
 		while(i--) roman=(key[+digits.pop()+(i*10)]||"")+roman;
 		return Array(+digits.join("")+1).join("M")+roman;
-	}
-	var canto=parseInt((query.split(/^[ipd]/i)[1]).split(',')[0]);
-	var cantoTrailed=("0"+canto).substr(canto.toString().length-1);
-	var versi=query.split(',')[1];
-	var versInit=parseInt(versi.split('-')[0]);
-	var versEnd=parseInt(versi.split('-')[1]);
-	versi=", versi "+versInit+"-"+versEnd;
-	var pageTitle="Divina Commedia/"+cantica+"/Canto "+romanize(canto);
+	},
+	canto = parseInt((query.split(/^[ipd]/i)[1]).split(',')[0]),
+	cantoTrailed = ("0"+canto).substr(canto.toString().length-1),
+	versi = query.split(',')[1],
+	versInit = parseInt(versi.split('-')[0]),
+	versEnd = parseInt(versi.split('-')[1]);
+	versi = ", versi "+versInit+"-"+versEnd;
+	var pageTitle = "Divina Commedia/"+cantica+"/Canto "+romanize(canto);
 	$("section").last().children("h2").first().text(cantica+", canto "+canto+versi);
-	$("section").last().find("a").first().attr("href","//it.wikisource.org/wiki/"+pageTitle);
+	$("section").last().find("a").first().attr("href", "//it.wikisource.org/wiki/"+pageTitle);
 	$.get(
 		"//it.wikisource.org/w/api.php",
 		{
-			action:"query",
-			format:"json",
-			prop:"revisions",
-			rvlimit:1,
-			titles:pageTitle,
-			rvprop:"content"
+			action: "query",
+			format: "json",
+			prop: "revisions",
+			rvlimit: 1,
+			titles: pageTitle,
+			rvprop: "content"
 		},
 		function(data){
 			var content=data.query.pages[Object.keys(data.query.pages)[0]].revisions[0]["*"];
@@ -84,26 +90,26 @@ $(document).ready(function(){
 	$.get(
 		"//commons.wikimedia.org/w/api.php",
 		{
-			action:"query",
-			format:"json",
-			prop:"imageinfo",
-			iiprop:"url",
-			iiurlwidth:1600,
-			iiurlheight:160,
-			generator:"categorymembers",
-			gcmtitle:"Category:"+cantica+" Canto "+cantoTrailed,
-			gcmtype:"file"
+			action: "query",
+			format: "json",
+			prop: "imageinfo",
+			iiprop: "url",
+			iiurlwidth: 1600,
+			iiurlheight: 160,
+			generator: "categorymembers",
+			gcmtitle: "Category:"+cantica+" Canto "+cantoTrailed,
+			gcmtype: "file"
 		},
 		function(data){
-			$.each(data.query.pages,function(pageid,page){
-				var ii=page.imageinfo[0];
+			$.each(data.query.pages, function(pageid, page){
+				var ii = page.imageinfo[0];
 				$("<img>")
 				.attr({
-					src:ii.thumburl,
-					alt:page.title
+					src: ii.thumburl,
+					alt: page.title
 				})
 				.wrap("<a>").parent()
-				.attr("href",ii.descriptionurl)
+				.attr("href", ii.descriptionurl)
 				.appendTo(document.body);
 			});
 		},

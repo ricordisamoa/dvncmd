@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 The license file can be found at COPYING.txt (in this directory).
 */
-html{
-	height:100%;
-	width:100%;
+html {
+	height: 100%;
+	width: 100%;
 	background: #5b270e;
 	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNzUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM1YjI3MGUiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMmQxMTEwIiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L3JhZGlhbEdyYWRpZW50PgogIDxyZWN0IHg9Ii01MCIgeT0iLTUwIiB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
 	background: -moz-radial-gradient(center, ellipse cover, #5b270e 0%, #2d1110 100%);
@@ -28,103 +28,105 @@ html{
 	background: -o-radial-gradient(center, ellipse cover, #5b270e 0%,#2d1110 100%);
 	background: -ms-radial-gradient(center, ellipse cover, #5b270e 0%,#2d1110 100%);
 	background: radial-gradient(ellipse at center, #5b270e 0%,#2d1110 100%);
+	background-attachment: fixed;
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b270e', endColorstr='#2d1110',GradientType=1 );
-	background-attachment:fixed;
 }
-body{
-	font-family:Helvetica,Arial,sans-serif;
-	text-align:center;
-	color:white;
-	-webkit-user-select:none;
-	-moz-user-select:-moz-none;
-	-khtml-user-select:none;
-	user-select:none;
-	cursor:default;
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	text-align: center;
+	color: white;
+	-webkit-user-select: none;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	user-select: none;
+	cursor: default;
 }
-h1,h1+h2{
-	font-family:'IM Fell DW Pica', serif;
-	font-style:italic;
-	font-weight:normal;
-	font-size:65px;
-	line-height:60%;
-	text-shadow:3px 3px 2px black;
+h1,
+h1+h2 {
+	font-family: 'IM Fell DW Pica', serif;
+	font-style: italic;
+	font-weight: normal;
+	font-size: 65px;
+	line-height: 60%;
+	text-shadow: 3px 3px 2px black;
 }
-h1+h2{
-	font-size:35px;
-	font-style:normal;
-	text-shadow:2px 2px 2px black;
+h1+h2 {
+	font-size: 35px;
+	font-style: normal;
+	text-shadow: 2px 2px 2px black;
 }
 table#links td a{
-	font-size:30px;
-	width:200px;
-	background:red;
-	display:inline-block;
-	text-align:center;
-	height:50px;
-	max-height:50px;
-	line-height:50px;
-	padding:0;
-	margin:0;
-	cursor:pointer;
+	font-size: 30px;
+	width: 200px;
+	background: red;
+	display: inline-block;
+	text-align: center;
+	height: 50px;
+	max-height: 50px;
+	line-height: 50px;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
 }
-table#links td a,table#links td{
-	border-radius:30px;
-	overflow:hidden;
+table#links td,
+table#links td a {
+	border-radius: 30px;
+	overflow: hidden;
 }
-table#links td{
-	padding:0;
-	height:50px;
-	border:0px transparent none;
+table#links td {
+	padding: 0;
+	height: 50px;
+	border: 0px transparent none;
 }
-table#links{
-	border-spacing:20px;
-	border:0px transparent none;
-	padding:0;
-	margin:30px;
-	display:none;
+table#links {
+	border-spacing: 20px;
+	border: 0px transparent none;
+	padding: 0;
+	margin: 30px;
+	display: none;
 }
-a#wikisource{
+a#wikisource {
 	background: #365e86;
-	background: -moz-linear-gradient(top,  #365e86 0%, #4c8bb8 50%, #407dac 51%, #93bbd5 100%);
-	background: -webkit-linear-gradient(top,  #365e86 0%,#4c8bb8 50%,#407dac 51%,#93bbd5 100%);
-	background: -o-linear-gradient(top,  #365e86 0%,#4c8bb8 50%,#407dac 51%,#93bbd5 100%);
-	background: -ms-linear-gradient(top,  #365e86 0%,#4c8bb8 50%,#407dac 51%,#93bbd5 100%);
-	background: linear-gradient(top,  #365e86 0%,#4c8bb8 50%,#407dac 51%,#93bbd5 100%);
+	background: -moz-linear-gradient(top, #365e86 0%, #4c8bb8 50%, #407dac 51%, #93bbd5 100%);
+	background: -webkit-linear-gradient(top, #365e86 0%, #4c8bb8 50%, #407dac 51%, #93bbd5 100%);
+	background: -o-linear-gradient(top, #365e86 0%, #4c8bb8 50%, #407dac 51%, #93bbd5 100%);
+	background: -ms-linear-gradient(top, #365e86 0%, #4c8bb8 50%, #407dac 51%, #93bbd5 100%);
+	background: linear-gradient(top, #365e86 0%, #4c8bb8 50%, #407dac 51%, #93bbd5 100%);
 }
 
-section{
-	width:35%;
-	padding:20px;
-	border-radius:10px;
-	border:solid 1px #aaa;
-	overflow:hidden;
-	text-align:center;
-	background:#595959;
-	background:-moz-linear-gradient(top,  #595959 0%, #323232 100%);
-	background:-webkit-linear-gradient(top,  #595959 0%,#323232 100%);
-	background:-o-linear-gradient(top,  #595959 0%,#323232 100%);
-	background:-ms-linear-gradient(top,  #595959 0%,#323232 100%);
-	background:linear-gradient(top,  #595959 0%,#323232 100%);
-	filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#595959', endColorstr='#323232',GradientType=0 );
-	box-shadow:0 0 2px #222,0 0 2px #222,0 0 2px #222,0 0 2px #222;
-	margin:23px auto;
+section {
+	width: 35%;
+	padding: 20px;
+	border-radius: 10px;
+	border: solid 1px #aaa;
+	overflow: hidden;
+	text-align: center;
+	box-shadow: 0 0 2px #222, 0 0 2px #222, 0 0 2px #222, 0 0 2px #222;
+	margin: 23px auto;
+	background: #595959;
+	background: -moz-linear-gradient(top, #595959 0%, #323232 100%);
+	background: -webkit-linear-gradient(top, #595959 0%, #323232 100%);
+	background: -o-linear-gradient(top, #595959 0%, #323232 100%);
+	background: -ms-linear-gradient(top, #595959 0%, #323232 100%);
+	background: linear-gradient(top, #595959 0%, #323232 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#595959', endColorstr='#323232',GradientType=0 );
 }
-section h2{
-	font-weight:normal;
-	font-variant:normal;
-	font-style:normal;
-	font-size:20px;
-	margin-top:0;
+section h2 {
+	font-weight: normal;
+	font-variant: normal;
+	font-style: normal;
+	font-size: 20px;
+	margin-top: 0;
 }
 section a,
-section a:visited{
-	color:whitesmoke;
-	text-decoration:none;
-	border-bottom:1px dashed whitesmoke;
+section a:visited {
+	color: whitesmoke;
+	text-decoration: none;
+	border-bottom: 1px dashed whitesmoke;
 }
 	
 
-a#divcom-url{
+a#divcom-url {
 	font-size: 28px;
 	line-height:28px;
 	width:200px;
@@ -135,24 +137,31 @@ a#divcom-url{
 	float: left;
 	height: 30px;
 	overflow: hidden;
-	text-align:left;color:#333;
-	-webkit-user-select:text;
-	-moz-user-select:-moz-text;
-	-khtml-user-select:text;
-	user-select:text;
+	text-align: left;
+	color: #333;
+	-webkit-user-select: text;
+	-moz-user-select: -moz-text;
+	-khtml-user-select: text;
+	user-select: text;
 }
-span#divcom-cantica{color:#363}
-span#divcom-canto{color:#633}
-span#divcom-versi{color:#336}
+span#divcom-cantica {
+	color: #363;
+}
+span#divcom-canto {
+	color: #633;
+}
+span#divcom-versi {
+	color: #336;
+}
 
 a#divcom-url-copy,
 a#divcom-url-twitter,
-a#divcom-url-facebook{
-	color:white;
-	text-decoration:none;
+a#divcom-url-facebook {
+	color: white;
+	text-decoration: none;
 }
 a#divcom-url-copy.hover,
 a#divcom-url-twitter:hover,
-a#divcom-url-facebook:hover{
-	text-decoration:underline;
+a#divcom-url-facebook:hover {
+	text-decoration: underline;
 }
