@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html ng-app>
+<html data-ng-app>
 <!--
 Divine Comedy link shortener - dvncmd.tk
 
-Copyright © 2012-2013 by Ricordisamoa
+Copyright © 2012-2014 by Ricordisamoa
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -32,103 +32,77 @@ The license file can be found at COPYING.txt (in this directory).
 <body>
 <?php
 
-if(array_key_exists('q',$_GET)){
+require_once 'DivineComedy.php';
 
-$userlang='it';
-if($_GET['lang'] and $_GET['lang']!='' and $_GET['lang']!=$userlang) $userlang=$_GET['lang'];
-function romanize($num){
-	# taken from http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter
-	# originally by Steven Levithan, released under the MIT License
-	# ported from JavaScript to PHP by me
-	$digits=str_split(strval($num));
-	$key=array('','C','CC','CCC','CD','D','DC','DCC','DCCC','CM',
-		'','X','XX','XXX','XL','L','LX','LXX','LXXX','XC',
-		'','I','II','III','IV','V','VI','VII','VIII','IX');
-	$roman='';
-	$i=3;
-	while($i--){
-		$f=intval(array_pop($digits))+($i*10);
-		$roman=(array_key_exists($f,$key)?$key[$f]:'').$roman;
-	}
-	return implode(array_fill(0,intval(implode($digits,''))+1,''),'M').$roman;
+if(array_key_exists('q', $_GET)){
+
+$lang = LANG;
+if(array_key_exists('lang', $_GET) and $_GET['lang'] != ''){
+	$lang = $_GET['lang'];
 }
-$query=$_GET['q'];
-$parts=explode(',',$query);
-$cantica=substr($parts[0],0,1);
-if($cantica=='i') $cantica_name='Inferno';
-else if($cantica=='p') $cantica_name='Purgatorio';
-else if($cantica=='d') $cantica_name='Paradiso';
+
+$query = $_GET['q'];
+$parts = explode(',', $query);
+
+$cantica = substr($parts[0], 0, 1);
+if($cantica == 'i') $cantica = 'Inferno';
+else if($cantica == 'p') $cantica = 'Purgatorio';
+else if($cantica == 'd') $cantica = 'Paradiso';
 else die('No cantica, no party!');
-$canto=substr($parts[0],1);
-if((($cantica=='p'||$cantica=='d')&&intval($canto)>33)||($cantica=='i'&&intval($canto)>34)) die('Error: '.$cantica_name.' has less than '.$canto.' canti.');
-if(!is_numeric($canto)) die('Invalid canto!');
-$versi=explode('-',$parts[1]);
-if(count($versi)<1&&count($versi)>2) die('Error: must specify 1 or 2 line numbers!');
-if(!is_numeric($versi[0])||(count($versi)==2&&!is_numeric($versi[1]))) die('The lines must be numbers!');
-if(count($versi)==2&&intval($versi[0])>=intval($versi[1])) die('The line numbers must be in order!');
-else if(count($versi)==1) $versi[1]=$versi[0];
-if(intval($versi[1])-intval($versi[0])>11) die('Error: exceeded maximum absolute number of lines (12)!');
-$pagetitle='Divina_Commedia/'.$cantica_name.'/Canto_'.romanize($canto);
 
-$flags=[
-	'ca'=>'Nuvola Catalonia flag.svg',# Flag of Catalonia.svg
-	'cs'=>'Nuvola Czech flag.svg',# Flag of the Czech Republic.svg
-	'de'=>'Nuvola German flag.svg',# Flag of Germany.svg
-	'el'=>'Nuvola Greek flag.svg',# Flag of Greece.svg
-	'en'=>'Nuvola English language flag.svg',
-	'es'=>'Nuvola Spain flag.svg',# Flag of Spain.svg
-	'et'=>'Nuvola Estonian flag.svg',# Flag of Estonia.svg
-	'fi'=>'Nuvola Finnish flag.svg',# Flag of Finland.svg
-	'fr'=>'Nuvola France flag.svg',# Flag of France.svg
-	'it'=>'Nuvola Italy flag.svg',# Flag of Italy.svg
-	'la'=>'Nuvola Vatican flag.svg',# Flag of the Vatican City.svg (temporary workaround)
-	'no'=>'Nuvola Norwegian flag.svg',# Flag of Norway.svg
-	'pl'=>'Nuvola Polish flag.svg',# Flag of Poland.svg
-	'pt'=>'Nuvola Portuguese flag.svg',# Flag of Portugal.svg
-	'ro'=>'Nuvola Romanian flag.svg',# Flag of Romania.svg
-	'ru'=>'Nuvola Russian flag.svg',# Flag of Russia.svg
-	'sl'=>'Nuvola Slovenian flag.svg',# Flag of Slovenia.svg
-	'sv'=>'Nuvola Swedish flag.svg'# Flag of Sweden.svg
-];
+$cantica = new Cantica($cantica, $lang);
+$canto = substr($parts[0],1);
+if(!is_numeric($canto)){
+    die('Invalid canto!');
+}
+$canto = $cantica->getCanto(intval($canto));
 
-$languages=[];
-$languages_query=http_build_query([
-	action=>'query',
-	meta=>'siteinfo',
-	siprop=>'languages',
-	format=>'json'
-]);
-$languages_query=json_decode(file_get_contents('http://it.wikisource.org/w/api.php?'.$languages_query),true)['query']['languages'];
-foreach($languages_query as $language){
-	$languages[$language['code']]=$language['*'];
+$versi = explode('-', $parts[1]);
+if(count($versi) < 1 or count($versi) > 2){
+    die('Error: must specify 1 or 2 line numbers!');
+}
+if(count($versi) == 1){
+    $versi[1] = $versi[0];
+}
+if(!is_numeric($versi[0]) or !is_numeric($versi[1])){
+    die('The line numbers must be integer!');
 }
 
-$langlinks=http_build_query([
-	action=>'query',
-	prop=>'langlinks',
-	format=>'json',
-	lllimit=>'max',
-	titles=>$pagetitle
-]);
-$langlinks=json_decode(file_get_contents('http://it.wikisource.org/w/api.php?'.$langlinks),true)['query']['pages'];
-$langlinks=$langlinks[array_keys($langlinks)[0]]['langlinks'];
-array_push($langlinks,['lang'=>'it','*'=>$pagetitle]);
-foreach($langlinks as $index=>$langlink){
-	if($langlink['lang']==$userlang) $pagetitle=str_replace(' ','_',$langlink['*']);
-	if($langlink['lang']=='fr' or $langlink['lang']==$userlang) unset($langlinks[$index]);# do not show French for now
+$versi[0] = intval($versi[0]);
+$versi[1] = intval($versi[1]);
+
+if($versi[1] - $versi[0] > 11){
+    die('Error: exceeded maximum absolute number of lines (12)!');
 }
-function compare_langlinks($l1,$l2){
-	return strcmp($l1['lang'],$l2['lang']);
+
+$lls = $canto->getLanglinks();
+
+foreach($lls as $i => $ll){
+	if($ll['lang'] == 'fr' or $ll['lang'] == $canto->lang){
+	    unset($lls[$i]); # the French version is is prose
+	}
 }
-$langlinks=array_values($langlinks);# re-index array
-usort($langlinks,'compare_langlinks');# sort by language code
+$lls = array_values($lls);        # re-index array
+usort($lls, 'compare_langlinks'); # sort by language code
+
 echo '<div style="position:fixed;margin-top:100px;right:.5em;float:right">';
-foreach($langlinks as $index=>$langlink){
-	echo '<a target="_self" href="'.($langlink['lang']=='it'?'':('/'.$langlink['lang'])).'/'.$_GET['q'].'" title="'.$languages[$langlink['lang']].'">';
-	if($flags[$langlink['lang']]) echo '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/'.str_replace(' ','_',$flags[$langlink['lang']]).'" alt="'.$languages[$langlink['lang']].'">';
-	else echo $languages[$langlink['lang']];
-	echo '</a><br>';
-	if($index==intval(count($langlinks)/2)) echo '</div><div style="position:fixed;left:.5em;float:left">';
+foreach($lls as $i => $ll){
+    $lname = $languages[$ll['lang']];
+	echo '<a target="_self" href="'.($ll['lang'] == LANG ? '' : ('/'.$ll['lang'])).'/'.$query.'" title="'.$lname.'">';
+	$flag = getFlag($ll['lang']);
+	if($flag != null){
+	    echo '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/'.$flag.'" alt="'.$lname.'">';
+	}
+	else{
+	    echo $lname;
+	}
+	echo '</a>';
+	if($i == intval(count($lls)/2)){
+	    echo '</div><div style="position:fixed;left:.5em;float:left">';
+	}
+	elseif($i < count($lls) - 1){
+	    echo '<br>';
+	}
 }
 echo '</div>';
 
@@ -136,119 +110,45 @@ echo '</div>';
 ?>
 <header>
 <h1><?php
-$titles=[
-	ca=>'La Divina Comèdia',
-	cs=>'Božská komedie',
-	en=>'Divine Comedy',
-	es=>'La Divina Comedia',
-	fi=>'Jumalaisesta näytelmästä',
-	fr=>'La Divine Comédie',
-	it=>'Divina Commedia',
-	la=>'Divina Comoedia',
-	pl=>'Boska Komedia',
-	pt=>'A Divina Comédia',
-	ro=>'Divina Comedie',
-	ru=>'Божественная комедия',
-	sl=>'Božanska komedija'
-];
-if($titles[$userlang]) echo $titles[$userlang];
-else echo $titles['en'];
+
+echo array_key_exists($lang, $titles) ? $titles[$lang] : $titles['en'];
+
 ?></h1>
 <h2>link shortener</h2>
 </header>
 <?php
 
-if(array_key_exists('q',$_GET)){
+if(array_key_exists('q', $_GET)){
 
-# get the raw wikicode
-$content_url='http://'.$userlang.'.wikisource.org/w/index.php?title='.$pagetitle.'&action=raw';
-$content=file_get_contents($content_url);
+$lines = $canto->getLines($versi[0], $versi[1]);
 
-# get only text in "<poem>" tags
-$content=preg_replace('/(^[\s\S]*<poem>[\s\n\r]*|[\s\n\r]*<\/poem>[\s\S]*$)/i','',$content);
+echo '<section><h2>', $cantica->name, ', canto ', $canto->num, ', vers', (count($lines) == 1 ? 'o '.$versi[0] : 'i '.implode($versi,'-')), '</h2><blockquote>', implode($lines, '<br>') ,'</blockquote><small>Text from <a href="', $canto->url, '">Wikisource</a></small></section>';
 
-# remove images (TODO: expect any possible ns-6 alias)
-$content=preg_replace('/\[\[\:?([Ff]ile|[Ii]mat?ge|[Ii]mmagine)\:[^\[\]]+(\[\[[^\[\]]+\]\][^\[\]]+)*\]\]\n/','',$content);
-
-# other languages
-$content=preg_replace('/^[\s\S]*<div class="verse"><pre>\s+/i','',$content);
-$content=preg_replace('/\s+<\/pre><\/div>[\s\S]*$/i','',$content);
-
-# remove <ref> tags
-$content=preg_replace('/<ref[\s\w]*(\/|>[^<>]*<\/ref)>/i','',$content);
-
-# remove indentations at line beginning
-$content=preg_replace('/^[:\d\s\']*/m','',$content);
-
-# remove final italic marks from Latin text
-if($userlang=='la') $content=preg_replace('/\'+\n/','\n',$content);
-
-# $templates='§|R|r|[Cc]ommentItem|[Aa]utoreCitato'; CURRENTLY IN TESTING
-$templates='[\w\§]+';
-
-# remove unprintable templates
-$content=preg_replace('/\{\{([Oo]tsikko|[Ee]ncabezado|[Tt]itulus2)\n*\|[^\|\{\}]+(\|([^\|\{\}]+))*\}\}/','',$content);
-$content=preg_replace('/\{\{('.$templates.')\n*\|[^\|\{\}]+\}\}/','',$content);
-
-# replace some templates with printable parts
-$content=preg_replace('/\{\{('.$templates.')\n*\|[^\|\{\}]+\|([^\|\{\}]+)\}\}/','$2',$content);
-
-# remove initial and final spaces
-$content=preg_replace('/(^[\s\n\r]+|[\s\n\r]+$)/','',$content);
-
-# remove superfluous line-breaks
-$content=preg_replace('/\s*(<br\s?\/?>\s*)*\n+/','\n',$content);
-
-# split the text into lines
-$content=explode('\n',$content);
-
-if(intval($versi[1])>count($content)) die('Error: exceeded number of lines in this canto ('.count($content).')!');
-
-# select desired lines only
-$content=array_slice($content,intval($versi[0])-1,intval($versi[1])-intval($versi[0])+1);
-
-# ...print them
-echo '<section><h2>',$cantica_name,', canto ',$canto,', vers',(count($content)==1?'o '.$versi[0]:'i '.implode($versi,'-')),'</h2><blockquote>',implode($content,'<br>'),'</blockquote><small>Text from <a href="http://',$userlang,'.wikisource.org/wiki/',$pagetitle,'">Wikisource</a></small></section>';
-
-$images=http_build_query([
-	action=>'query',
-	format=>'json',
-	prop=>'imageinfo',
-	iiprop=>'url',
-	iiurlwidth=>1600,
-	iiurlheight=>160,
-	generator=>'categorymembers',
-	gcmtitle=>'Category:'.$cantica_name.' Canto '.str_pad($canto,2,'0',STR_PAD_LEFT),
-	gcmtype=>'file'
-]);
-$images=json_decode(file_get_contents('http://commons.wikimedia.org/w/api.php?'.$images),true)['query'];
-if($images['pages']){
-	foreach($images['pages'] as $pageid=>$page){
-		$ii=$page['imageinfo'][0];
-		echo '<a href="'.$ii['descriptionurl'].'"><img alt="'.$page['title'].'" src="'.$ii['thumburl'].'"></a>';
-	}
+foreach($canto->getImages() as $i => $img){
+    echo '<a href="'.$img['descriptionurl'].'"><img alt="'.$img['title'].'" src="'.$img['thumburl'].'"></a>';
 }
+
 echo '<!--';
 }
 ?>
 
 <section>
 <h2>Type a Divine Comedy Reference</h2>
-<form oninput="genera()">
+<form>
 <table>
 <tr>
 <td><label>Cantica:<br>
-<select id="cantica" ng-model="cantica">
+<select id="cantica" data-ng-model="cantica">
 <option value="i" selected>Inferno</option>
 <option value="p">Purgatorio</option>
 <option value="d">Paradiso</option>
 </select></label></td>
 <td><label>Canto:<br>
-<input type="number" id="canto" ng-model="canto" min="1" max="34" value="1"></label></td>
+<input type="number" id="canto" data-ng-model="canto" min="1" max="{{cantica === 'i' ? 34 : 33}}" value="1"></label></td>
 <td><label>Lines:<br>
-<input type="text" id="versi" ng-model="versi" placeholder="1-6" pattern="^\d+(\-\d+)?$"></label></td>
+<input type="text" id="versi" data-ng-model="versi" placeholder="1-6" pattern="^\d+(\-\d+)?$"></label></td>
 <td><label>Language code:<br>
-<input type="text" id="lang" ng-model="lang" value="it"></label></td>
+<input type="text" id="lang" data-ng-model="lang" value="it"></label></td>
 </tr>
 </table>
 </form>
@@ -257,13 +157,8 @@ echo '<!--';
 <section>
 <h2>Get a Universal Link</h2>
 <a id="divcom-url" target="_blank" href="{{lang!='it'&&lang!=''&&lang!=null?lang+'/':''}}{{cantica}}{{canto}},{{versi}}">http://dvncmd.tk/<span id="divcom-lang">{{lang!='it'&&lang!=''&&lang!=null?lang+'/':''}}</span><span id="divcom-cantica">{{cantica}}</span><span id="divcom-canto">{{canto}}</span>,<span id="divcom-versi">{{versi}}</span></a>
-<div id="bibly-links">
-<a id="divcom-url-copy">Copy</a>
-<a id="divcom-url-twitter" target="_blank" href="http://twitter.com/?message=Read%20http://dvncmd.tk?i1,1-3">Twitter</a>
-<a id="divcom-url-facebook" target="_blank" href="http://www.facebook.com/connect/prompt_feed.php?&amp;message=Read%20http://dvncmd.tk?i1,1-3">Facebook</a>		
-</div>
 </section>
-<?php if(array_key_exists('q',$_GET)) echo '-->'; ?>
+<?php if(array_key_exists('q', $_GET)) echo '-->'; ?>
 <a href="https://github.com/ricordisamoa/dvncmd"><img style="position: fixed; top: 0; right: 0; border: 0;" src="//s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 </body>
 </html>
