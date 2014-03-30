@@ -38,7 +38,7 @@ $flags = [
     'fi' => ['Finland',            'Finnish'],
     'fr' => ['France',             'France'],
     'it' => ['Italy',              'Italy'],
-    'la' => ['the Vatican City',   'Vatican'], # only Vatican?
+    'la' => ['the Vatican City',   'Vatican'], // only Vatican?
     'no' => ['Norway',             'Norwegian'],
     'pl' => ['Poland',             'Polish'],
     'pt' => ['Portugal',           'Portuguese'],
@@ -51,19 +51,21 @@ $flags = [
 function getFlag($lang, $nuvola = true)
 {
     global $forms, $flags;
-    if(array_key_exists($lang, $flags)){
+    if (array_key_exists($lang, $flags)) {
         $index = ($nuvola == true ? 1 : 0);
         return str_replace(' ', '_', sprintf($forms[$index], $flags[$lang][$index]));
     }
     return null;
 }
 
+/**
+  * source:
+  * http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter
+  * by Steven Levithan, released under the MIT License
+  * ported from JavaScript to PHP by Ricordisamoa
+  */
 function romanize($num)
 {
-    # source:
-    # http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter
-    # by Steven Levithan, released under the MIT License
-    # ported from JavaScript to PHP by Ricordisamoa
     $digits = str_split(strval($num));
     $key = array('', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM',
         '', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC',
@@ -82,8 +84,7 @@ function getApi($arg1, $arg2 = null)
     if ($arg2 != null) {
         $api = $arg1;
         $params = $arg2;
-    }
-    else {
+    } else {
         $api = sprintf(API, LANG);
         $params = $arg1;
     }
@@ -94,19 +95,22 @@ function getApi($arg1, $arg2 = null)
     return json_decode($res, true);
 }
 
-function compare_langlinks($l1, $l2){
+function compare_langlinks($l1, $l2)
+{
     return strcmp($l1['lang'], $l2['lang']);
 }
 
 $languages = [];
-$languages_query = getApi([
-    'action' => 'query',
-    'meta'   => 'siteinfo',
-    'siprop' => 'languages',
-    'format' => 'json'
-]);
+$languages_query = getApi(
+    [
+        'action' => 'query',
+        'meta'   => 'siteinfo',
+        'siprop' => 'languages',
+        'format' => 'json'
+    ]
+);
 $languages_query = $languages_query['query']['languages'];
-foreach($languages_query as $language){
+foreach ($languages_query as $language) {
     $languages[$language['code']] = $language['*'];
 }
 
@@ -119,18 +123,20 @@ class Orig
     }
     public function getLanglinks()
     {
-        $res = getApi([
-            'action'  => 'query',
-            'prop'    => 'langlinks',
-            'format'  => 'json',
-            'lllimit' => 'max',
-            'titles'  => $this->orig
-        ]);
+        $res = getApi(
+            [
+                'action'  => 'query',
+                'prop'    => 'langlinks',
+                'format'  => 'json',
+                'lllimit' => 'max',
+                'titles'  => $this->orig
+            ]
+        );
         $res = $res['query']['pages'];
         $res = $res[array_keys($res)[0]]['langlinks'];
         array_push($res, ['lang' => LANG, '*' => $this->orig]);
-        $res = array_values($res);        # re-index array
-        usort($res, 'compare_langlinks'); # sort by language code
+        $res = array_values($res);        // re-index array
+        usort($res, 'compare_langlinks'); // sort by language code
         return $res;
     }
 
@@ -174,12 +180,11 @@ class Canto extends Orig
 
         if ($this->lang === LANG) {
             $this->title = $this->orig;
-        }
-        else {
+        } else {
             $o   = new Orig($this->orig);
             $lls = $o->getLanglinks();
-            foreach($lls as $i => $ll){
-                if($ll['lang'] === $this->lang){
+            foreach ($lls as $i => $ll) {
+                if ($ll['lang'] === $this->lang) {
                     $this->title = $ll['*'];
                     break;
                 }
@@ -190,21 +195,23 @@ class Canto extends Orig
 
     public function getContent()
     {
-        $query = getApi($this->api, [
-            'action'  => 'query',
-            'format'  => 'json',
-            'titles'  => $this->title,
-            'prop'    => 'revisions',
-            'rvprop'  => 'content',
-            'rvlimit' => 1
-        ]);
+        $query = getApi(
+            $this->api,
+            [
+                'action'  => 'query',
+                'format'  => 'json',
+                'titles'  => $this->title,
+                'prop'    => 'revisions',
+                'rvprop'  => 'content',
+                'rvlimit' => 1
+            ]
+        );
         $query = $query['query'];
-        if(array_key_exists('pages', $query)){
-            foreach($query['pages'] as $pageid => $page){
-                if(array_key_exists('revisions', $page)){
+        if (array_key_exists('pages', $query)) {
+            foreach ($query['pages'] as $pageid => $page) {
+                if (array_key_exists('revisions', $page)) {
                     return $page['revisions'][0]['*'];
-                }
-                else{
+                } else {
                     return;
                 }
             }
@@ -216,41 +223,41 @@ class Canto extends Orig
 
         $content = $this->getContent();
 
-        # get only text in "<poem>" tags
+        // get only text in "<poem>" tags
         $content = preg_replace('/(^[\s\S]*<poem>[\s\n\r]*|[\s\n\r]*<\/poem>[\s\S]*$)/i', '', $content);
 
-        # remove images (TODO: expect any possible ns-6 alias)
+        // remove images (TODO: expect any possible ns-6 alias)
         $content = preg_replace('/\[\[\:?([Ff]ile|[Ii]mat?ge|[Ii]mmagine)\:[^\[\]]+(\[\[[^\[\]]+\]\][^\[\]]+)*\]\]\n/', '', $content);
 
-        # other languages
+        // other languages
         $content = preg_replace('/^[\s\S]*<div class="verse"><pre>\s+/i', '', $content);
         $content = preg_replace('/\s+<\/pre><\/div>[\s\S]*$/i', '', $content);
 
-        # strip <ref> tags
+        // strip <ref> tags
         $content = preg_replace('/<ref[\s\w]*(\/|>[^<>]*<\/ref)>/i', '', $content);
 
-        # remove indentations at line beginning
+        // remove indentations at line beginning
         $content = preg_replace('/^[:\d\s\']*/m', '', $content);
 
-        # remove final italic marks from Latin text
+        // remove final italic marks from Latin text
         if ($this->lang === 'la') {
             $content = preg_replace('/\'+\n/', '\n', $content);
         }
 
-        # $templates='§|R|r|[Cc]ommentItem|[Aa]utoreCitato'; CURRENTLY IN TESTING
+        // $templates='§|R|r|[Cc]ommentItem|[Aa]utoreCitato'; CURRENTLY IN TESTING
         $templates = '[\w\§]+';
 
-        # remove unprintable templates
+        // remove unprintable templates
         $content = preg_replace('/\{\{([Oo]tsikko|[Ee]ncabezado|[Tt]itulus2)\n*\|[^\|\{\}]+(\|([^\|\{\}]+))*\}\}/', '', $content);
         $content = preg_replace('/\{\{('.$templates.')\n*\|[^\|\{\}]+\}\}/', '', $content);
 
-        # replace some templates with printable parts
+        // replace some templates with printable parts
         $content = preg_replace('/\{\{('.$templates.')\n*\|[^\|\{\}]+\|([^\|\{\}]+)\}\}/', '$2', $content);
 
-        # remove initial and final spaces
+        // remove initial and final spaces
         $content = preg_replace('/(^[\s\n\r]+|[\s\n\r]+$)/', '', $content);
 
-        # remove superfluous line-breaks
+        // remove superfluous line-breaks
         $content = preg_replace('/\s*(<br\s?\/?>\s*)*\n+/', '\n', $content);
 
         return $content;
@@ -258,15 +265,15 @@ class Canto extends Orig
 
     public function getLines($begin = null, $end = null)
     {
-        # split the text into lines
+        // split the text into lines
         $content = $this->getCleanContent();
         $lines = explode('\n', $content);
-        if($begin != null and $end != null){
-            # select desired lines only
-            if($begin > $end){
+        if ($begin != null and $end != null) {
+            // select desired lines only
+            if ($begin > $end) {
                 die('Error: $begin cannot be greater than $end');
             }
-            if($end > count($lines)){
+            if ($end > count($lines)) {
                 die(sprintf('Error: exceeded number of lines in this canto: %d', count($content)));
             }
             $lines = array_slice($lines, $begin-1, $end-$begin+1);
@@ -281,21 +288,24 @@ class Canto extends Orig
 
     public function getImages()
     {
-        $images = getApi(COMMONS_API, [
-            'action'      => 'query',
-            'format'      => 'json',
-            'prop'        => 'imageinfo',
-            'iiprop'      => 'url',
-            'iiurlwidth'  => IMG_WIDTH,
-            'iiurlheight' => IMG_HEIGHT,
-            'generator'   => 'categorymembers',
-            'gcmtitle'    => $this->commonsCat,
-            'gcmtype'     => 'file'
-        ]);
+        $images = getApi(
+            COMMONS_API,
+            [
+                'action'      => 'query',
+                'format'      => 'json',
+                'prop'        => 'imageinfo',
+                'iiprop'      => 'url',
+                'iiurlwidth'  => IMG_WIDTH,
+                'iiurlheight' => IMG_HEIGHT,
+                'generator'   => 'categorymembers',
+                'gcmtitle'    => $this->commonsCat,
+                'gcmtype'     => 'file'
+            ]
+        );
         $images = $images['query'];
         $res = [];
-        if(array_key_exists('pages', $images)){
-            foreach($images['pages'] as $pageid => $page){
+        if (array_key_exists('pages', $images)) {
+            foreach ($images['pages'] as $pageid => $page) {
                 $k = $page['imageinfo'][0];
                 $k['title'] = $page['title'];
                 array_push($res, $k);
