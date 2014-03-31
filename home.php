@@ -92,7 +92,7 @@ if (array_key_exists('q', $_GET)) {
         }
     }
     $lls = array_values($lls);        // re-index array
-    usort($lls, 'compare_langlinks'); // sort by language code
+    usort($lls, 'compareLanglinks'); // sort by language code
 
     echo '<div style="position:fixed;margin-top:100px;right:.5em;float:right">';
     foreach ($lls as $i => $ll) {
@@ -105,7 +105,7 @@ if (array_key_exists('q', $_GET)) {
             echo $lname;
         }
         echo '</a>';
-        if ($i == intval(count($lls)/2)) {
+        if ($i == intval(count($lls) / 2)) {
             echo '</div><div style="position:fixed;left:.5em;float:left">';
         } elseif ($i < count($lls) - 1) {
             echo '<br>';

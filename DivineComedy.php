@@ -1,5 +1,31 @@
 <?php
 
+/**
+ * Divine Comedy link shortener - dvncmd.tk
+ *
+ * PHP version 5
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * The license file can be found at COPYING.txt (in this directory).
+ *
+ * @author    Ricordisamoa
+ * @copyright 2012-2014 Ricordisamoa
+ * @license   https://www.gnu.org/licenses/agpl-3.0.html  GNU Affero GPL
+ */
+
+// {{{ constants
 const API = 'http://%s.wikisource.org/w/api.php';
 const COMMONS_API = 'http://commons.wikimedia.org/w/api.php';
 const WIKIPATH = 'http://%s.wikisource.org/wiki/%s';
@@ -9,10 +35,12 @@ const BASEPATH = 'Divina Commedia/%s/Canto %s';
 
 const IMG_WIDTH = 1600;
 const IMG_HEIGHT = 160;
+// }}}
 
 $titles = [
     'ca' => 'La Divina Comèdia',
     'cs' => 'Božská komedie',
+    'el' => 'Θεία Κωμωδία',
     'en' => 'Divine Comedy',
     'es' => 'La Divina Comedia',
     'fi' => 'Jumalaisesta näytelmästä',
@@ -48,6 +76,14 @@ $flags = [
     'sv' => ['Sweden',             'Swedish'],
 ];
 
+/**
+ * Returns the appropriate flag for a language.
+ *
+ * @param str  $lang   the language code
+ * @param bool $nuvola whether to return a Nuvola flag
+ *
+ * @return string the title of the flag image
+ */
 function getFlag($lang, $nuvola = true)
 {
     global $forms, $flags;
@@ -59,11 +95,17 @@ function getFlag($lang, $nuvola = true)
 }
 
 /**
-  * source:
-  * http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter
-  * by Steven Levithan, released under the MIT License
-  * ported from JavaScript to PHP by Ricordisamoa
-  */
+ * Convert an integer into a Roman numeral
+ *
+ * @param int $num the number to convert
+ *
+ * @return string the romanized number
+ *
+ * @author    Steven Levithan
+ * @author    Ricordisamoa
+ * @copyright 2008 Steven Levithan, 2012 Ricordisamoa
+ * @license   http://opensource.org/licenses/MIT  MIT License
+ */
 function romanize($num)
 {
     $digits = str_split(strval($num));
@@ -73,10 +115,10 @@ function romanize($num)
     $roman = '';
     $i = 3;
     while ($i--) {
-        $f = intval(array_pop($digits)) + ($i*10);
+        $f = intval(array_pop($digits)) + ($i * 10);
         $roman = (array_key_exists($f, $key) ? $key[$f] : '').$roman;
     }
-    return implode(array_fill(0, intval(implode($digits, ''))+1, ''), 'M').$roman;
+    return implode(array_fill(0, intval(implode($digits, '')) + 1, ''), 'M').$roman;
 }
 
 function getApi($arg1, $arg2 = null)
@@ -95,7 +137,7 @@ function getApi($arg1, $arg2 = null)
     return json_decode($res, true);
 }
 
-function compare_langlinks($l1, $l2)
+function compareLanglinks($l1, $l2)
 {
     return strcmp($l1['lang'], $l2['lang']);
 }
@@ -114,6 +156,12 @@ foreach ($languages_query as $language) {
     $languages[$language['code']] = $language['*'];
 }
 
+
+/**
+ * A simple class representing a Wikisource page in original language (Italian)
+ *
+ * It is supposed to be extended by Cantica and Canto.
+ */
 class Orig
 {
 
@@ -136,12 +184,15 @@ class Orig
         $res = $res[array_keys($res)[0]]['langlinks'];
         array_push($res, ['lang' => LANG, '*' => $this->orig]);
         $res = array_values($res);        // re-index array
-        usort($res, 'compare_langlinks'); // sort by language code
+        usort($res, 'compareLanglinks'); // sort by language code
         return $res;
     }
 
 }
 
+/**
+ * A wrapper class to obtain a specific Canto instance
+ */
 class Cantica extends Orig
 {
     public $name = false;
@@ -164,6 +215,11 @@ class Cantica extends Orig
 
 }
 
+/**
+ * Represents a Canto (original or translated) on Wikisource
+ *
+ * Should be instantiated by Cantica only.
+ */
 class Canto extends Orig
 {
 
@@ -172,7 +228,7 @@ class Canto extends Orig
         $this->cantica = $cantica;
         $this->num = $num;
         $this->lang = $lang;
-        
+
         $this->commonsCat = 'Category:'.$this->cantica.' Canto '.str_pad($this->num, 2, '0', STR_PAD_LEFT);
 
         $this->orig = sprintf(BASEPATH, $this->cantica, romanize($num));
@@ -193,6 +249,12 @@ class Canto extends Orig
         $this->url = sprintf(WIKIPATH, $this->lang, implode('/', array_map('rawurlencode', explode('/', str_replace(' ', '_', $this->title)))));
     }
 
+    /**
+     * Returns the raw content of the Wikisource page for the current Canto.
+     * Internal use only.
+     *
+     * @return string
+     */
     public function getContent()
     {
         $query = getApi(
@@ -218,6 +280,12 @@ class Canto extends Orig
         }
     }
 
+    /**
+     * Returns the content of the current Canto, after stripping all but lines of poetry.
+     * Internal use only.
+     *
+     * @return string
+     */
     public function getCleanContent()
     {
 
@@ -263,6 +331,14 @@ class Canto extends Orig
         return $content;
     }
 
+    /**
+     * Returns the cleaned-up content of the current Canto, in form of lines.
+     *
+     * @param int $begin the starting line
+     * @param int $end   the ending line
+     *
+     * @return array
+     */
     public function getLines($begin = null, $end = null)
     {
         // split the text into lines
@@ -276,16 +352,26 @@ class Canto extends Orig
             if ($end > count($lines)) {
                 die(sprintf('Error: exceeded number of lines in this canto: %d', count($content)));
             }
-            $lines = array_slice($lines, $begin-1, $end-$begin+1);
+            $lines = array_slice($lines, $begin - 1, $end - $begin + 1);
         }
         return $lines;
     }
 
+    /**
+     * Returns the number of lines in the current Canto.
+     *
+     * @return int
+     */
     public function numberOfLines()
     {
         return count($this->getLines());
     }
 
+    /**
+     * Returns an array of images from Wikimedia Commons about the current Canto.
+     *
+     * @return array
+     */
     public function getImages()
     {
         $images = getApi(

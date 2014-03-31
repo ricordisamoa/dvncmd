@@ -5,4 +5,4 @@ php:
 before_script:
   - pear install PHP_CodeSniffer
   - phpenv rehash
-script: phpcs .
+script: phpcs . --standard=ruleset.xml
