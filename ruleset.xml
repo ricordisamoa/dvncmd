@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <ruleset>
-	<rule ref="PEAR"/>
+	<rule ref="PEAR">
+		<exclude name="PEAR.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+	</rule>
 
 	<rule ref="Generic.Classes.DuplicateClassName" />
 
