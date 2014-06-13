@@ -97,10 +97,12 @@ if (array_key_exists('q', $_GET)) {
     echo '<div style="position:fixed;margin-top:100px;right:.5em;float:right">';
     foreach ($lls as $i => $ll) {
         $lname = $languages[$ll['lang']];
-        echo '<a target="_self" href="'.($ll['lang'] == LANG ? '' : ('/'.$ll['lang'])).'/'.$query.'" title="'.$lname.'">';
+        echo '<a target="_self" href="'.($ll['lang'] == LANG ? '' : ('/'.$ll['lang'])).'/'.$query,
+        '" title="'.$lname.'">';
         $flag = getFlag($ll['lang']);
         if ($flag != null) {
-            echo '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/'.$flag.'" alt="'.$lname.'">';
+            echo '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/',
+            $flag.'" alt="'.$lname.'">';
         } else {
             echo $lname;
         }
@@ -119,7 +121,7 @@ if (array_key_exists('q', $_GET)) {
 <header>
 <h1><?php
 
-echo array_key_exists($lang, $titles) ? $titles[$lang] : $titles['en'];
+echo isset($lang) && array_key_exists($lang, $titles) ? $titles[$lang] : $titles['en'];
 
 ?></h1>
 <h2>link shortener</h2>
@@ -131,11 +133,13 @@ if (array_key_exists('q', $_GET)) {
     $lines = $canto->getLines($versi[0], $versi[1]);
 
     echo '<section><h2>', $cantica->name, ', canto ', $canto->num, ', vers',
-    (count($lines) == 1 ? 'o '.$versi[0] : 'i '.implode($versi, '-')), '</h2><blockquote>', implode($lines, '<br>'),
+    (count($lines) == 1 ? 'o '.$versi[0] : 'i '.implode($versi, '-')),
+    '</h2><blockquote>', implode($lines, '<br>'),
     '</blockquote><small>Text from <a href="', $canto->url, '">Wikisource</a></small></section>';
 
     foreach ($canto->getImages() as $i => $img) {
-        echo '<a href="'.$img['descriptionurl'].'"><img alt="'.$img['title'].'" src="'.$img['thumburl'].'"></a>';
+        echo '<a href="'.$img['descriptionurl'].'"><img alt="'.$img['title'],
+        '" src="'.$img['thumburl'].'"></a>';
     }
 
     echo '<!--';
@@ -167,7 +171,8 @@ if (array_key_exists('q', $_GET)) {
 
 <section>
 <h2>Get a Universal Link</h2>
-<a id="divcom-url" target="_blank" href="{{lang!='it'&&lang!=''&&lang!=null?lang+'/':''}}{{cantica}}{{canto}},{{versi}}">http://dvncmd.tk/<span id="divcom-lang">{{lang!='it'&&lang!=''&&lang!=null?lang+'/':''}}</span><span id="divcom-cantica">{{cantica}}</span><span id="divcom-canto">{{canto}}</span>,<span id="divcom-versi">{{versi}}</span></a>
+<a id="divcom-url" target="_blank"
+href="{{lang!='it'&&lang!=''&&lang!=null?lang+'/':''}}{{cantica}}{{canto}},{{versi}}">http://dvncmd.tk/<span id="divcom-lang">{{lang!='it'&&lang!=''&&lang!=null?lang+'/':''}}</span><span id="divcom-cantica">{{cantica}}</span><span id="divcom-canto">{{canto}}</span>,<span id="divcom-versi">{{versi}}</span></a>
 </section>
 <?php
 
@@ -176,6 +181,7 @@ if (array_key_exists('q', $_GET)) {
 }
 
 ?>
-<a href="https://github.com/ricordisamoa/dvncmd"><img style="position: fixed; top: 0; right: 0; border: 0;" src="//s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+<a href="https://github.com/ricordisamoa/dvncmd">
+<img style="position: fixed; top: 0; right: 0; border: 0;" src="//s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 </body>
 </html>

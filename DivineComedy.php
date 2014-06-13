@@ -32,6 +32,7 @@ const WIKIPATH = 'http://%s.wikisource.org/wiki/%s';
 
 const LANG = 'it';
 const BASEPATH = 'Divina Commedia/%s/Canto %s';
+const COMMONS_CAT_PATH = 'Category:%s Canto %02d';
 
 const IMG_WIDTH = 1600;
 const IMG_HEIGHT = 160;
@@ -169,6 +170,7 @@ class Orig
     {
         $this->orig = $orig;
     }
+
     public function getLanglinks()
     {
         $res = getApi(
@@ -197,6 +199,7 @@ class Cantica extends Orig
 {
     public $name = false;
     public $lang = false;
+
     public function __construct($name, $lang = LANG)
     {
         $this->name = $name;
@@ -229,7 +232,7 @@ class Canto extends Orig
         $this->num = $num;
         $this->lang = $lang;
 
-        $this->commonsCat = 'Category:'.$this->cantica.' Canto '.str_pad($this->num, 2, '0', STR_PAD_LEFT);
+        $this->commonsCat = sprintf(COMMONS_CAT_PATH, $this->cantica, $this->num);
 
         $this->orig = sprintf(BASEPATH, $this->cantica, romanize($num));
         $this->api  = sprintf(API, $this->lang);
@@ -246,8 +249,43 @@ class Canto extends Orig
                 }
             }
         }
-        $this->url = sprintf(WIKIPATH, $this->lang, implode('/', array_map('rawurlencode', explode('/', str_replace(' ', '_', $this->title)))));
+        $this->url = sprintf(
+            WIKIPATH, $this->lang, implode(
+                '/', array_map('rawurlencode', explode('/', str_replace(' ', '_', $this->title)))
+            )
+        );
     }
+
+    private $cleanings = [
+        // get only text in "<poem>" tags
+        '/(^[\s\S]*<poem>[\s\n\r]*|[\s\n\r]*<\/poem>[\s\S]*$)/i' => '',
+
+        // remove images (TODO: expect any possible ns-6 alias)
+        '/\[\[\:?([Ff]ile|[Ii]mat?ge|[Ii]mmagine)\:.+?\]\]/' => '',
+
+        // other languages
+        '/^[\s\S]*<div class="verse"><pre>\s+/i' => '',
+        '/\s+<\/pre><\/div>[\s\S]*$/i' => '',
+
+        // strip <ref> tags
+        '/<ref[\s\w]*(\/|>[^<>]*<\/ref)>/i' => '',
+
+        // remove indentations at line beginning
+        '/^[:\d\s\']*/m' => '',
+
+        // remove unprintable templates
+        '/\{\{([Oo]tsikko|[Ee]ncabezado|[Tt]itulus2)\n*\|[^\|\{\}]+(\|([^\|\{\}]+))*\}\}/' => '',
+        '/\{\{([\w\§]+)\n*\|[^\|\{\}]+\}\}/' => '',
+
+        // replace some templates with printable parts
+        '/\{\{([\w\§]+)\n*\|[^\|\{\}]+\|([^\|\{\}]+)\}\}/' => '$2',
+
+        // remove initial and final spaces
+        '/(^[\s\n\r]+|[\s\n\r]+$)/' => '',
+
+        // remove superfluous line-breaks
+        '/\s*(<br\s?\/?>\s*)*\n+/' => '\n',
+    ];
 
     /**
      * Returns the raw content of the Wikisource page for the current Canto.
@@ -288,45 +326,17 @@ class Canto extends Orig
      */
     public function getCleanContent()
     {
-
         $content = $this->getContent();
 
-        // get only text in "<poem>" tags
-        $content = preg_replace('/(^[\s\S]*<poem>[\s\n\r]*|[\s\n\r]*<\/poem>[\s\S]*$)/i', '', $content);
-
-        // remove images (TODO: expect any possible ns-6 alias)
-        $content = preg_replace('/\[\[\:?([Ff]ile|[Ii]mat?ge|[Ii]mmagine)\:[^\[\]]+(\[\[[^\[\]]+\]\][^\[\]]+)*\]\]\n/', '', $content);
-
-        // other languages
-        $content = preg_replace('/^[\s\S]*<div class="verse"><pre>\s+/i', '', $content);
-        $content = preg_replace('/\s+<\/pre><\/div>[\s\S]*$/i', '', $content);
-
-        // strip <ref> tags
-        $content = preg_replace('/<ref[\s\w]*(\/|>[^<>]*<\/ref)>/i', '', $content);
-
-        // remove indentations at line beginning
-        $content = preg_replace('/^[:\d\s\']*/m', '', $content);
+        // apply standard replacements
+        foreach ($this->cleanings as $from => $to) {
+            $content = preg_replace($from, $to, $content);
+        }
 
         // remove final italic marks from Latin text
         if ($this->lang === 'la') {
             $content = preg_replace('/\'+\n/', '\n', $content);
         }
-
-        // $templates='§|R|r|[Cc]ommentItem|[Aa]utoreCitato'; CURRENTLY IN TESTING
-        $templates = '[\w\§]+';
-
-        // remove unprintable templates
-        $content = preg_replace('/\{\{([Oo]tsikko|[Ee]ncabezado|[Tt]itulus2)\n*\|[^\|\{\}]+(\|([^\|\{\}]+))*\}\}/', '', $content);
-        $content = preg_replace('/\{\{('.$templates.')\n*\|[^\|\{\}]+\}\}/', '', $content);
-
-        // replace some templates with printable parts
-        $content = preg_replace('/\{\{('.$templates.')\n*\|[^\|\{\}]+\|([^\|\{\}]+)\}\}/', '$2', $content);
-
-        // remove initial and final spaces
-        $content = preg_replace('/(^[\s\n\r]+|[\s\n\r]+$)/', '', $content);
-
-        // remove superfluous line-breaks
-        $content = preg_replace('/\s*(<br\s?\/?>\s*)*\n+/', '\n', $content);
 
         return $content;
     }
@@ -388,13 +398,15 @@ class Canto extends Orig
                 'gcmtype'     => 'file'
             ]
         );
-        $images = $images['query'];
         $res = [];
-        if (array_key_exists('pages', $images)) {
-            foreach ($images['pages'] as $pageid => $page) {
-                $k = $page['imageinfo'][0];
-                $k['title'] = $page['title'];
-                array_push($res, $k);
+        if (array_key_exists('query', $images)) {
+            $images = $images['query'];
+            if (array_key_exists('pages', $images)) {
+                foreach ($images['pages'] as $pageid => $page) {
+                    $k = $page['imageinfo'][0];
+                    $k['title'] = $page['title'];
+                    array_push($res, $k);
+                }
             }
         }
         return $res;
