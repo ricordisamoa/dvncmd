@@ -5,4 +5,5 @@ php:
 before_script:
   - pear install PHP_CodeSniffer
   - phpenv rehash
-script: phpcs . --standard=ruleset.xml
+  - git clone https://git.wikimedia.org/git/mediawiki/tools/codesniffer.git /home/travis/build/codesniffer
+script: phpcs . --standard=/home/travis/build/codesniffer/MediaWiki/ruleset.xml
