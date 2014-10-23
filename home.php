@@ -34,14 +34,16 @@ The license file can be found at COPYING.txt (in this directory).
 
 require_once 'DivineComedy.php';
 
-if ( array_key_exists( 'q', $_GET ) ) {
+define( 'PARAMS', $_GET );
 
-	$lang = LANG;
-	if ( array_key_exists( 'lang', $_GET ) and $_GET['lang'] != '' ) {
-		$lang = $_GET['lang'];
+if ( isset( PARAMS['q'] ) ) {
+
+	$lang = WS_ORIG_LANG;
+	if ( isset( PARAMS['lang'] ) and PARAMS['lang'] !== '' ) {
+		$lang = PARAMS['lang'];
 	}
 
-	$query = $_GET['q'];
+	$query = PARAMS['q'];
 	$parts = explode( ',', $query );
 
 	$cantica = substr( $parts[0], 0, 1 );
@@ -97,12 +99,13 @@ if ( array_key_exists( 'q', $_GET ) ) {
 	echo '<div style="position:fixed;margin-top:100px;right:.5em;float:right">';
 	foreach ( $lls as $i => $ll ) {
 		$lname = $languages[$ll['lang']];
-		echo '<a target="_self" href="' . ( $ll['lang'] === LANG ? '' : ( '/' . $ll['lang'] ) ) . '/' . $query .
-		'" title="' . $lname . '">';
+		echo '<a target="_self" href="' .
+			( $ll['lang'] === WS_ORIG_LANG ? '' : ( '/' . $ll['lang'] ) ) .
+			"/$query\" title=\"$lname\">";
 		$flag = getFlag( $ll['lang'] );
-		if ( $flag != null ) {
+		if ( $flag !== null ) {
 			echo '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/' .
-			$flag . '" alt="' . $lname . '">';
+				$flag . '" alt="' . $lname . '">';
 		} else {
 			echo $lname;
 		}
@@ -128,18 +131,18 @@ echo isset( $lang ) && array_key_exists( $lang, $titles ) ? $titles[$lang] : $ti
 </header>
 <?php
 
-if ( array_key_exists( 'q', $_GET ) ) {
+if ( isset( PARAMS['q'] ) ) {
 
 	$lines = $canto->getLines( $versi[0], $versi[1] );
 
 	echo "<section><h2>{$cantica->name}, canto {$canto->num}, vers" .
-	( count( $lines ) == 1 ? 'o ' . $versi[0] : 'i ' . implode( $versi, '-' ) ) .
-	'</h2><blockquote>' . implode( $lines, '<br>' ) .
-	"</blockquote><small>Text from <a href=\"{$canto->url}\">Wikisource</a></small></section>";
+		( count( $lines ) == 1 ? 'o ' . $versi[0] : 'i ' . implode( $versi, '-' ) ) .
+		'</h2><blockquote>' . implode( $lines, '<br>' ) .
+		"</blockquote><small>Text from <a href=\"{$canto->url}\">Wikisource</a></small></section>";
 
 	foreach ( $canto->getImages() as $i => $img ) {
 		echo "<a href=\"{$img['descriptionurl']}\"><img alt=\"{$img['title']}\"" .
-		" src=\"{$img['thumburl']}\"></a>";
+			" src=\"{$img['thumburl']}\"></a>";
 	}
 
 	echo '<!--';
@@ -176,7 +179,7 @@ href="{{lang!='it'&&lang!=''&&lang!=null?lang+'/':''}}{{cantica}}{{canto}},{{ver
 </section>
 <?php
 
-if ( array_key_exists( 'q', $_GET ) ) {
+if ( isset( PARAMS['q'] ) ) {
 	echo '-->';
 }
 

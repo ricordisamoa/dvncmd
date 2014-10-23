@@ -26,16 +26,17 @@
  */
 
 // {{{ constants
-const API = 'http://%s.wikisource.org/w/api.php';
-const COMMONS_API = 'http://commons.wikimedia.org/w/api.php';
-const WIKIPATH = 'http://%s.wikisource.org/wiki/%s';
+define( 'WS_API', 'http://%s.wikisource.org/w/api.php' );
+define( 'WS_PATH', 'http://%s.wikisource.org/wiki/%s' );
+define( 'WS_ORIG_LANG', 'it' );
+define( 'WS_ORIG_API', sprintf( WS_API, WS_ORIG_LANG ) );
+define( 'WS_ORIG_PAGE_PATH', 'Divina Commedia/%s/Canto %s' );
 
-const LANG = 'it';
-const BASEPATH = 'Divina Commedia/%s/Canto %s';
-const COMMONS_CAT_PATH = 'Category:%s Canto %02d';
+define( 'COMMONS_API', 'http://commons.wikimedia.org/w/api.php' );
+define( 'COMMONS_CAT_PATH', 'Category:%s Canto %02d' );
 
-const IMG_WIDTH = 1600;
-const IMG_HEIGHT = 160;
+define( 'IMG_WIDTH', 1600 );
+define( 'IMG_HEIGHT', 160 );
 // }}}
 
 $titles = [
@@ -80,15 +81,14 @@ $flags = [
 /**
  * Returns the appropriate flag for a language.
  *
- * @param str  $lang   the language code
- * @param bool $nuvola whether to return a Nuvola flag
+ * @param str $lang  the language code
+ * @param int $index the index of the flag in $forms
  *
  * @return string the title of the flag image
  */
-function getFlag( $lang, $nuvola = true ) {
+function getFlag( $lang, $index = 0 ) {
 	global $forms, $flags;
 	if ( array_key_exists( $lang, $flags ) ) {
-		$index = ( $nuvola == true ? 1 : 0 );
 		return str_replace( ' ', '_', sprintf( $forms[$index], $flags[$lang][$index] ) );
 	}
 	return null;
@@ -120,17 +120,8 @@ function romanize( $num ) {
 	return implode( array_fill( 0, intval( implode( $digits, '' ) ) + 1, '' ), 'M' ) . $roman;
 }
 
-function getApi( $arg1, $arg2 = null ) {
-	if ( $arg2 != null ) {
-		$api = $arg1;
-		$params = $arg2;
-	} else {
-		$api = sprintf( API, LANG );
-		$params = $arg1;
-	}
-
-	$params = http_build_query( $params );
-
+function getApi( $api, $data ) {
+	$params = http_build_query( $data );
 	$res = file_get_contents( $api . '?' . $params );
 	return json_decode( $res, true );
 }
@@ -141,6 +132,7 @@ function compareLanglinks( $l1, $l2 ) {
 
 $languages = [];
 $languages_query = getApi(
+	WS_ORIG_API,
 	[
 		'action' => 'query',
 		'meta'   => 'siteinfo',
@@ -159,7 +151,7 @@ foreach ( $languages_query as $language ) {
  *
  * It is supposed to be extended by Cantica and Canto.
  */
-class Orig {
+abstract class Orig {
 
 	public function __construct( $orig ) {
 		$this->orig = $orig;
@@ -167,6 +159,7 @@ class Orig {
 
 	public function getLanglinks() {
 		$res = getApi(
+			WS_ORIG_API,
 			[
 				'action'  => 'query',
 				'prop'    => 'langlinks',
@@ -177,7 +170,10 @@ class Orig {
 		);
 		$res = $res['query']['pages'];
 		$res = $res[array_keys( $res )[0]]['langlinks'];
-		$res[] = ['lang' => LANG, '*' => $this->orig];
+		$res[] = [
+			'lang' => WS_ORIG_LANG,
+			'*'    => $this->orig
+		];
 		$res = array_values( $res );       // re-index array
 		usort( $res, 'compareLanglinks' ); // sort by language code
 		return $res;
@@ -189,10 +185,10 @@ class Orig {
  * A wrapper class to obtain a specific Canto instance
  */
 class Cantica extends Orig {
-	public $name = false;
-	public $lang = false;
+	public $name;
+	public $lang;
 
-	public function __construct( $name, $lang = LANG ) {
+	public function __construct( $name, $lang = WS_ORIG_LANG ) {
 		$this->name = $name;
 		$this->lang = $lang;
 	}
@@ -214,21 +210,20 @@ class Cantica extends Orig {
  */
 class Canto extends Orig {
 
-	public function __construct( $cantica, $num, $lang = LANG ) {
+	public function __construct( $cantica, $num, $lang = WS_ORIG_LANG ) {
 		$this->cantica = $cantica;
 		$this->num = $num;
 		$this->lang = $lang;
 
 		$this->commonsCat = sprintf( COMMONS_CAT_PATH, $this->cantica, $this->num );
 
-		$this->orig = sprintf( BASEPATH, $this->cantica, romanize( $num ) );
-		$this->api  = sprintf( API, $this->lang );
+		parent::__construct( sprintf( WS_ORIG_PAGE_PATH, $this->cantica, romanize( $num ) ) );
+		$this->api = sprintf( WS_API, $this->lang );
 
-		if ( $this->lang === LANG ) {
+		if ( $this->lang === WS_ORIG_LANG ) {
 			$this->title = $this->orig;
 		} else {
-			$o   = new Orig( $this->orig );
-			$lls = $o->getLanglinks();
+			$lls = $this->getLanglinks();
 			foreach ( $lls as $i => $ll ) {
 				if ( $ll['lang'] === $this->lang ) {
 					$this->title = $ll['*'];
@@ -237,7 +232,7 @@ class Canto extends Orig {
 			}
 		}
 		$this->url = sprintf(
-			WIKIPATH, $this->lang, implode(
+			WS_PATH, $this->lang, implode(
 				'/', array_map( 'rawurlencode', explode( '/', str_replace( ' ', '_', $this->title ) ) )
 			)
 		);
@@ -338,7 +333,7 @@ class Canto extends Orig {
 		// split the text into lines
 		$content = $this->getCleanContent();
 		$lines = explode( '\n', $content );
-		if ( $begin != null and $end != null ) {
+		if ( $begin !== null and $end !== null ) {
 			// select desired lines only
 			if ( $begin > $end ) {
 				die( 'Error: $begin cannot be greater than $end' );
