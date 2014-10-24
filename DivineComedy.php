@@ -243,7 +243,7 @@ class Canto extends Orig {
 		'/(^[\s\S]*<poem>[\s\n\r]*|[\s\n\r]*<\/poem>[\s\S]*$)/i' => '',
 
 		// remove images (TODO: expect any possible ns-6 alias)
-		'/\[\[\:?([Ff]ile|[Ii]mat?ge|[Ii]mmagine)\:.+?\]\]/' => '',
+		'/\[\[\:?([Ff]ile|[Ii]mat?ge|[Ii]mmagine)\:.*?(\[\[.+?\]\].*?)*\]\]/' => '',
 
 		// other languages
 		'/^[\s\S]*<div class="verse"><pre>\s+/i' => '',
