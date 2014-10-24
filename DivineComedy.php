@@ -56,8 +56,8 @@ $titles = [
 	'sl' => 'Božanska komedija'
 ];
 
-$forms = ['Flag of %s.svg', 'Nuvola %s flag.svg'];
-$flags = [
+$wgForms = ['Flag of %s.svg', 'Nuvola %s flag.svg'];
+$wgFlags = [
 	'ca' => ['Catalonia',          'Catalonia'],
 	'cs' => ['the Czech Republic', 'Czech'],
 	'de' => ['Germany',            'German'],
@@ -86,10 +86,10 @@ $flags = [
  *
  * @return string the title of the flag image
  */
-function getFlag( $lang, $index = 0 ) {
-	global $forms, $flags;
-	if ( array_key_exists( $lang, $flags ) ) {
-		return str_replace( ' ', '_', sprintf( $forms[$index], $flags[$lang][$index] ) );
+function getFlag( $lang, $index = 1 ) {
+	global $wgForms, $wgFlags;
+	if ( array_key_exists( $lang, $wgFlags ) ) {
+		return str_replace( ' ', '_', sprintf( $wgForms[$index], $wgFlags[$lang][$index] ) );
 	}
 	return null;
 }
