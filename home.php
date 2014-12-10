@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-ng-app>
+<html>
 <!--
 Divine Comedy link shortener - dvncmd.tk
 
@@ -27,7 +27,7 @@ The license file can be found at COPYING.txt (in this directory).
 <link href="//fonts.googleapis.com/css?family=IM+Fell+DW+Pica:400,400italic" rel="stylesheet" type="text/css">
 <link href="/common.css" rel="stylesheet" type="text/css">
 <link href="//upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Dante_icon.png/32px-Dante_icon.png" rel="shortcut icon" type="image/png">
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+<script src="/form.js" type="text/javascript"></script>
 </head>
 <body>
 <?php
@@ -57,21 +57,29 @@ if ( VIEW_MODE ) {
 
 <section>
 <h2>Type a Divine Comedy Reference</h2>
-<form>
+<form id="linkgen">
 <table>
 <tr>
-<td><label>Cantica:<br>
-<select id="cantica" data-ng-model="cantica">
+<td>
+<label for="input-cantica">Cantica:</label><br>
+<select id="input-cantica">
 <option value="i" selected>Inferno</option>
 <option value="p">Purgatorio</option>
 <option value="d">Paradiso</option>
-</select></label></td>
-<td><label>Canto:<br>
-<input type="number" id="canto" data-ng-model="canto" min="1" max="{{cantica === 'i' ? 34 : 33}}" value="1"></label></td>
-<td><label>Lines:<br>
-<input type="text" id="versi" data-ng-model="versi" placeholder="1-6" pattern="^\d+(\-\d+)?$"></label></td>
-<td><label>Language code:<br>
-<input type="text" id="lang" data-ng-model="lang" value="it"></label></td>
+</select>
+</td>
+<td>
+<label for="input-canto">Canto:</label><br>
+<input type="number" id="input-canto" min="1" max="34" value="1">
+</td>
+<td>
+<label for="input-lines">Lines:</label><br>
+<input type="text" id="input-lines" placeholder="1-6" pattern="^\d+(\-\d+)?$">
+</td>
+<td>
+<label for="input-lang">Language code:</label><br>
+<input type="text" id="input-lang" value="it">
+</td>
 </tr>
 </table>
 </form>
@@ -79,8 +87,7 @@ if ( VIEW_MODE ) {
 
 <section>
 <h2>Get a Universal Link</h2>
-<a id="divcom-url" target="_blank"
-href="{{lang!='it'&&lang!=''&&lang!=null?lang+'/':''}}{{cantica}}{{canto}},{{versi}}">http://dvncmd.tk/<span id="divcom-lang">{{lang!='it'&&lang!=''&&lang!=null?lang+'/':''}}</span><span id="divcom-cantica">{{cantica}}</span><span id="divcom-canto">{{canto}}</span>,<span id="divcom-versi">{{versi}}</span></a>
+<a id="link-main" target="_blank">http://dvncmd.tk/<span id="link-lang"></span><span id="link-cantica"></span><span id="link-canto"></span>,<span id="link-lines"></span></a>
 </section>
 <?php
 
