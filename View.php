@@ -96,7 +96,7 @@ function getData( $params, $languages, $lang ) {
 	$lls = array_values( $lls );       // re-index array
 	usort( $lls, 'compareLanglinks' ); // sort by language code
 
-	echo '<div style="position:fixed;margin-top:100px;right:.5em;float:right">';
+	echo '<div id="langlinks-right">';
 	foreach ( $lls as $i => $ll ) {
 		$lname = $languages[$ll['lang']];
 		echo '<a target="_self" href="' .
@@ -111,7 +111,7 @@ function getData( $params, $languages, $lang ) {
 		}
 		echo '</a>';
 		if ( $i == intval( count( $lls ) / 2 ) ) {
-			echo '</div><div style="position:fixed;left:.5em;float:left">';
+			echo '</div><div id="langlinks-left">';
 		} elseif ( $i < count( $lls ) - 1 ) {
 			echo '<br>';
 		}

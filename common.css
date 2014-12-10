@@ -154,6 +154,20 @@ span#divcom-versi {
 	color: #336;
 }
 
+#langlinks-left,
+#langlinks-right {
+	position:fixed;
+}
+#langlinks-left {
+	float: left;
+	left: .5em;
+}
+#langlinks-right {
+	float: right;
+	right: .5em;
+	margin-top: 100px;
+}
+
 a#divcom-url-copy,
 a#divcom-url-twitter,
 a#divcom-url-facebook {
