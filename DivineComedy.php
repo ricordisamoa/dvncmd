@@ -89,10 +89,6 @@ function getApi( $api, $data ) {
 	return json_decode( $res, true );
 }
 
-function compareLanglinks( $l1, $l2 ) {
-	return strcmp( $l1['lang'], $l2['lang'] );
-}
-
 $languages = [];
 $languages_query = getApi(
 	WS_ORIG_API,
@@ -168,13 +164,42 @@ abstract class Orig {
 		);
 		$res = $res['query']['pages'];
 		$res = $res[array_keys( $res )[0]]['langlinks'];
-		$res[] = [
-			'lang' => WS_ORIG_LANG,
-			'*'    => $this->orig
-		];
-		$res = array_values( $res );       // re-index array
-		usort( $res, 'compareLanglinks' ); // sort by language code
-		return $res;
+		$langlinks = [];
+		foreach ( $res as $ll ) {
+			$langlinks[$ll['lang']] = $ll['*'];
+		}
+		return $langlinks;
+	}
+
+	public function getLanglinkFlags() {
+		$lls = $this->getLanglinks();
+		$lls[WS_ORIG_LANG] = $this->orig;
+		unset( $lls['fr'] ); // the French version is in prose
+		unset( $lls[$this->lang] ); // do not show links to current language
+		ksort( $lls ); // sort by language code
+
+		$ret = '<div id="langlinks-right">';
+		foreach ( array_keys( $lls ) as $i => $llang ) {
+			$ltitle = $lls[$llang];
+			$ret .= '<a target="_self" href="' .
+				( $llang === WS_ORIG_LANG ? '' : ( '/' . $llang ) ) .
+				"/$query\" title=\"$ltitle\">";
+			$flag = self::getFlag( $llang );
+			if ( $flag !== null ) {
+				$ret .= '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/' .
+					$flag . '" alt="' . $ltitle . '">';
+			} else {
+				$ret .= $ltitle;
+			}
+			$ret .= '</a>';
+			if ( $i == intval( count( $lls ) / 2 ) ) {
+				$ret .= '</div><div id="langlinks-left">';
+			} elseif ( $i < count( $lls ) - 1 ) {
+				$ret .= '<br>';
+			}
+		}
+		$ret .= '</div>';
+		return $ret;
 	}
 
 }
@@ -228,12 +253,7 @@ class Canto extends Orig {
 			$this->title = $this->orig;
 		} else {
 			$lls = $this->getLanglinks();
-			foreach ( $lls as $i => $ll ) {
-				if ( $ll['lang'] === $this->lang ) {
-					$this->title = $ll['*'];
-					break;
-				}
-			}
+			$this->title = $lls[$this->lang];
 		}
 		$this->url = sprintf(
 			WS_PATH, $this->lang, implode(

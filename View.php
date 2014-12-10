@@ -77,37 +77,7 @@ function getData( $params, $languages, $lang ) {
 		die( 'Error: exceeded maximum absolute number of lines (12)!' );
 	}
 
-	$lls = $canto->getLanglinks();
-
-	foreach ( $lls as $i => $ll ) {
-		if ( $ll['lang'] == 'fr' || $ll['lang'] == $canto->lang ) {
-			unset( $lls[$i] ); // the French version is in prose
-		}
-	}
-	$lls = array_values( $lls );       // re-index array
-	usort( $lls, 'compareLanglinks' ); // sort by language code
-
-	echo '<div id="langlinks-right">';
-	foreach ( $lls as $i => $ll ) {
-		$lname = $languages[$ll['lang']];
-		echo '<a target="_self" href="' .
-			( $ll['lang'] === WS_ORIG_LANG ? '' : ( '/' . $ll['lang'] ) ) .
-			"/$query\" title=\"$lname\">";
-		$flag = Orig::getFlag( $ll['lang'] );
-		if ( $flag !== null ) {
-			echo '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/' .
-				$flag . '" alt="' . $lname . '">';
-		} else {
-			echo $lname;
-		}
-		echo '</a>';
-		if ( $i == intval( count( $lls ) / 2 ) ) {
-			echo '</div><div id="langlinks-left">';
-		} elseif ( $i < count( $lls ) - 1 ) {
-			echo '<br>';
-		}
-	}
-	echo '</div>';
+	echo $canto->getLanglinkFlags();
 
 	return [$cantica, $canto, $versi];
 }
