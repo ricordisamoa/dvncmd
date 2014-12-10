@@ -102,7 +102,7 @@ function getData( $params, $languages, $lang ) {
 		echo '<a target="_self" href="' .
 			( $ll['lang'] === WS_ORIG_LANG ? '' : ( '/' . $ll['lang'] ) ) .
 			"/$query\" title=\"$lname\">";
-		$flag = getFlag( $ll['lang'] );
+		$flag = Orig::getFlag( $ll['lang'] );
 		if ( $flag !== null ) {
 			echo '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/' .
 				$flag . '" alt="' . $lname . '">';

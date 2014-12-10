@@ -56,44 +56,6 @@ $titles = [
 	'sl' => 'Božanska komedija'
 ];
 
-$wgForms = ['Flag of %s.svg', 'Nuvola %s flag.svg'];
-$wgFlags = [
-	'ca' => ['Catalonia',          'Catalonia'],
-	'cs' => ['the Czech Republic', 'Czech'],
-	'de' => ['Germany',            'German'],
-	'el' => ['Greece',             'Greek'],
-	'en' => ['the United Kingdom', 'English language'],
-	'es' => ['Spain',              'Spain'],
-	'et' => ['Estonia',            'Estonian'],
-	'fi' => ['Finland',            'Finnish'],
-	'fr' => ['France',             'France'],
-	'it' => ['Italy',              'Italy'],
-	'la' => ['the Vatican City',   'Vatican'], // only Vatican?
-	'no' => ['Norway',             'Norwegian'],
-	'pl' => ['Poland',             'Polish'],
-	'pt' => ['Portugal',           'Portuguese'],
-	'ro' => ['Romania',            'Romanian'],
-	'ru' => ['Russia',             'Russian'],
-	'sl' => ['Slovenia',           'Slovenian'],
-	'sv' => ['Sweden',             'Swedish'],
-];
-
-/**
- * Returns the appropriate flag for a language.
- *
- * @param str $lang  the language code
- * @param int $index the index of the flag in $forms
- *
- * @return string the title of the flag image
- */
-function getFlag( $lang, $index = 1 ) {
-	global $wgForms, $wgFlags;
-	if ( array_key_exists( $lang, $wgFlags ) ) {
-		return str_replace( ' ', '_', sprintf( $wgForms[$index], $wgFlags[$lang][$index] ) );
-	}
-	return null;
-}
-
 /**
  * Convert an integer into a Roman numeral
  *
@@ -155,6 +117,43 @@ abstract class Orig {
 
 	public function __construct( $orig ) {
 		$this->orig = $orig;
+	}
+
+	private static $flag_formats = ['Flag of %s.svg', 'Nuvola %s flag.svg'];
+	private static $flag_langs = [
+		'ca' => ['Catalonia',          'Catalonia'],
+		'cs' => ['the Czech Republic', 'Czech'],
+		'de' => ['Germany',            'German'],
+		'el' => ['Greece',             'Greek'],
+		'en' => ['the United Kingdom', 'English language'],
+		'es' => ['Spain',              'Spain'],
+		'et' => ['Estonia',            'Estonian'],
+		'fi' => ['Finland',            'Finnish'],
+		'fr' => ['France',             'France'],
+		'it' => ['Italy',              'Italy'],
+		'la' => ['the Vatican City',   'Vatican'], // only Vatican?
+		'no' => ['Norway',             'Norwegian'],
+		'pl' => ['Poland',             'Polish'],
+		'pt' => ['Portugal',           'Portuguese'],
+		'ro' => ['Romania',            'Romanian'],
+		'ru' => ['Russia',             'Russian'],
+		'sl' => ['Slovenia',           'Slovenian'],
+		'sv' => ['Sweden',             'Swedish'],
+	];
+
+	/**
+	 * Returns the appropriate flag for a language.
+	 *
+	 * @param string $lang the language code
+	 * @param int $index the index of the flag in $forms
+	 *
+	 * @return string the title of the flag image
+	 */
+	public static function getFlag( $lang, $index = 1 ) {
+		if ( isset( self::$flag_langs[$lang] ) ) {
+			$flag = sprintf( self::$flag_formats[$index], self::$flag_langs[$lang][$index] );
+			return str_replace( ' ', '_', $flag );
+		}
 	}
 
 	public function getLanglinks() {
