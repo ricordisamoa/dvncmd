@@ -76,7 +76,7 @@ function getData( $params, $languages, $lang ) {
 		die( 'Error: exceeded maximum absolute number of lines (12)!' );
 	}
 
-	echo $canto->getLanglinkFlags();
+	echo $canto->getLanglinkFlags( $query );
 
 	return [$cantica, $canto, $versi];
 }

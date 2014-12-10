@@ -171,7 +171,7 @@ abstract class Orig {
 		return $langlinks;
 	}
 
-	public function getLanglinkFlags() {
+	public function getLanglinkFlags( $query ) {
 		$lls = $this->getLanglinks();
 		$lls[WS_ORIG_LANG] = $this->orig;
 		unset( $lls['fr'] ); // the French version is in prose
