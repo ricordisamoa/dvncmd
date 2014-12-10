@@ -121,6 +121,7 @@ function romanize( $num ) {
 }
 
 function getApi( $api, $data ) {
+	$data['format'] = 'json';
 	$params = http_build_query( $data );
 	$res = file_get_contents( $api . '?' . $params );
 	return json_decode( $res, true );
@@ -136,8 +137,7 @@ $languages_query = getApi(
 	[
 		'action' => 'query',
 		'meta'   => 'siteinfo',
-		'siprop' => 'languages',
-		'format' => 'json'
+		'siprop' => 'languages'
 	]
 );
 $languages_query = $languages_query['query']['languages'];
@@ -163,7 +163,6 @@ abstract class Orig {
 			[
 				'action'  => 'query',
 				'prop'    => 'langlinks',
-				'format'  => 'json',
 				'lllimit' => 'max',
 				'titles'  => $this->orig
 			]
@@ -280,7 +279,6 @@ class Canto extends Orig {
 			$this->api,
 			[
 				'action'  => 'query',
-				'format'  => 'json',
 				'titles'  => $this->title,
 				'prop'    => 'revisions',
 				'rvprop'  => 'content',
@@ -365,7 +363,6 @@ class Canto extends Orig {
 			COMMONS_API,
 			[
 				'action'      => 'query',
-				'format'      => 'json',
 				'prop'        => 'imageinfo',
 				'iiprop'      => 'url',
 				'iiurlwidth'  => IMG_WIDTH,
