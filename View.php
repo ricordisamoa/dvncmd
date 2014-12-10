@@ -47,21 +47,12 @@ function getData( $params, $languages, $lang ) {
 	$parts = explode( ',', $query );
 
 	$cantica = substr( $parts[0], 0, 1 );
-	switch ( $cantica ) {
-	case 'i':
-		$cantica = 'Inferno';
-		break;
-	case 'p':
-		$cantica = 'Purgatorio';
-		break;
-	case 'd':
-		$cantica = 'Paradiso';
-		break;
-	default:
+	if ( isset( Cantica::$names[$cantica] ) ) {
+		$cantica = new Cantica( Cantica::$names[$cantica], $lang );
+	} else {
 		die( 'No cantica, no party!' );
 	}
 
-	$cantica = new Cantica( $cantica, $lang );
 	$canto = substr( $parts[0], 1 );
 	if ( !is_numeric( $canto ) ) {
 		die( 'Invalid canto!' );

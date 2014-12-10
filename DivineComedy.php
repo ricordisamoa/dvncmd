@@ -183,6 +183,12 @@ abstract class Orig {
  * A wrapper class to obtain a specific Canto instance
  */
 class Cantica extends Orig {
+	public static $names = [
+		'i' => 'Inferno',
+		'p' => 'Purgatorio',
+		'd' => 'Paradiso'
+	];
+
 	public $name;
 	public $lang;
 

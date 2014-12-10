@@ -62,11 +62,14 @@ if ( VIEW_MODE ) {
 <tr>
 <td>
 <label for="input-cantica">Cantica:</label><br>
-<select id="input-cantica">
-<option value="i" selected>Inferno</option>
-<option value="p">Purgatorio</option>
-<option value="d">Paradiso</option>
-</select>
+<select id="input-cantica"><?php
+
+foreach ( array_keys( Cantica::$names ) as $i => $code ) {
+	echo '<option value="' . $code . '"' . ( $i == 0 ? ' selected' : '' ) .
+		'>' . Cantica::$names[$code] . '</option>';
+}
+
+?></select>
 </td>
 <td>
 <label for="input-canto">Canto:</label><br>
