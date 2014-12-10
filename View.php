@@ -60,18 +60,17 @@ function getData( $params, $languages, $lang ) {
 	$canto = $cantica->getCanto( intval( $canto ) );
 
 	$versi = explode( '-', $parts[1] );
-	if ( count( $versi ) < 1 or count( $versi ) > 2 ) {
+	if ( count( $versi ) < 1 || count( $versi ) > 2 ) {
 		die( 'Error: must specify 1 or 2 line numbers!' );
 	}
 	if ( count( $versi ) == 1 ) {
 		$versi[1] = $versi[0];
 	}
-	if ( !is_numeric( $versi[0] ) or !is_numeric( $versi[1] ) ) {
+	if ( !is_numeric( $versi[0] ) || !is_numeric( $versi[1] ) ) {
 		die( 'The line numbers must be integer!' );
 	}
 
-	$versi[0] = intval( $versi[0] );
-	$versi[1] = intval( $versi[1] );
+	$versi = array_map( 'intval', $versi );
 
 	if ( $versi[1] - $versi[0] > 11 ) {
 		die( 'Error: exceeded maximum absolute number of lines (12)!' );
