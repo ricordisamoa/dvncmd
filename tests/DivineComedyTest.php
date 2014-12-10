@@ -7,11 +7,11 @@ class DivineComedyTest extends PHPUnit_Framework_TestCase {
 	public function testNumberOfLines() {
 		$inferno = new Cantica( 'Inferno' );
 		$inferno18 = $inferno->getCanto( 18 );
-		$this->assertSame( $inferno18->numberOfLines(), 136 );
+		$this->assertSame( count( $inferno18->getLines() ), 136 );
 
 		$paradise = new Cantica( 'Paradiso', 'en' );
 		$paradise3 = $paradise->getCanto( 3 );
-		$this->assertSame( $paradise3->numberOfLines(), 130 );
+		$this->assertSame( count( $paradise3->getLines() ), 130 );
 	}
 
 	public function testItalian() {

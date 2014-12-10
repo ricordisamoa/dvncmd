@@ -345,15 +345,6 @@ class Canto extends Orig {
 	}
 
 	/**
-	 * Returns the number of lines in the current Canto.
-	 *
-	 * @return int
-	 */
-	public function numberOfLines() {
-		return count( $this->getLines() );
-	}
-
-	/**
 	 * Returns an array of images from Wikimedia Commons about the current Canto.
 	 *
 	 * @return array
