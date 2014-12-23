@@ -295,11 +295,10 @@ class Canto extends Orig {
 
 	/**
 	 * Returns the raw content of the Wikisource page for the current Canto.
-	 * Internal use only.
 	 *
 	 * @return string
 	 */
-	public function getContent() {
+	protected function getContent() {
 		$query = getApi(
 			$this->api,
 			[
@@ -324,11 +323,10 @@ class Canto extends Orig {
 
 	/**
 	 * Returns the content of the current Canto, after stripping all but lines of poetry.
-	 * Internal use only.
 	 *
 	 * @return string
 	 */
-	public function getCleanContent() {
+	protected function getCleanContent() {
 		$content = $this->getContent();
 
 		// apply standard replacements
