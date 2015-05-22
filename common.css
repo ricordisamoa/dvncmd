@@ -35,11 +35,13 @@ body {
 	font-family: Helvetica, Arial, sans-serif;
 	text-align: center;
 	color: white;
-	-webkit-user-select: none;
-	-moz-user-select: -moz-none;
-	-khtml-user-select: none;
-	user-select: none;
 	cursor: default;
+}
+::-moz-selection {
+	background: #916151;
+}
+::selection {
+	background: #916151;
 }
 h1,
 h1+h2 {
@@ -139,10 +141,6 @@ section a:visited {
 	overflow: hidden;
 	text-align: left;
 	color: #333;
-	-webkit-user-select: text;
-	-moz-user-select: -moz-text;
-	-khtml-user-select: text;
-	user-select: text;
 }
 #link-cantica {
 	color: #363;
