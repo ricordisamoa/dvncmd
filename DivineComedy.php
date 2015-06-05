@@ -227,7 +227,8 @@ class Cantica extends Orig {
 	}
 
 	public function getCanto( $num ) {
-		return new Canto( $this->name, $num, $this->lang );
+		$class = Canto::getClassName( $this->lang );
+		return new $class( $this->name, $num, $this->lang );
 	}
 
 }
@@ -262,7 +263,16 @@ class Canto extends Orig {
 		);
 	}
 
-	private $cleanings = [
+	public static function getClassName( $lang ) {
+		switch ( $lang ) {
+			case 'la':
+				return 'LatinCanto';
+			default:
+				return 'Canto';
+		}
+	}
+
+	protected static $cleanings = [
 		// get only text in "<poem>" tags
 		'/(^[\s\S]*<poem>[\s\n\r]*|[\s\n\r]*<\/poem>[\s\S]*$)/i' => '',
 
@@ -276,8 +286,8 @@ class Canto extends Orig {
 		// strip <ref> tags
 		'/<ref[\s\w]*(\/|>[^<>]*<\/ref)>/i' => '',
 
-		// remove indentations at line beginning
-		'/^[:\d\s\']*/m' => '',
+		// remove indentations and spaces at line beginning
+		'/^[:\s]*/m' => '',
 
 		// remove unprintable templates
 		'/\{\{([Oo]tsikko|[Ee]ncabezado|[Tt]itulus2)\n*\|[^\|\{\}]+(\|([^\|\{\}]+))*\}\}/' => '',
@@ -290,7 +300,7 @@ class Canto extends Orig {
 		'/(^[\s\n\r]+|[\s\n\r]+$)/' => '',
 
 		// remove superfluous line-breaks
-		'/\s*(<br\s?\/?>\s*)*\n+/' => '\n',
+		'/\s*(<br\s?\/?>\s*)*\n+/' => "\n",
 	];
 
 	/**
@@ -330,13 +340,9 @@ class Canto extends Orig {
 		$content = $this->getContent();
 
 		// apply standard replacements
-		foreach ( $this->cleanings as $from => $to ) {
+		// TODO: is preg_replace() with arrays faster?
+		foreach ( self::$cleanings as $from => $to ) {
 			$content = preg_replace( $from, $to, $content );
-		}
-
-		// remove final italic marks from Latin text
-		if ( $this->lang === 'la' ) {
-			$content = preg_replace( '/\'+\n/', '\n', $content );
 		}
 
 		return $content;
@@ -353,7 +359,7 @@ class Canto extends Orig {
 	public function getLines( $begin = null, $end = null ) {
 		// split the text into lines
 		$content = $this->getCleanContent();
-		$lines = explode( '\n', $content );
+		$lines = explode( "\n", $content );
 		if ( $begin !== null and $end !== null ) {
 			// select desired lines only
 			if ( $begin > $end ) {
@@ -398,6 +404,21 @@ class Canto extends Orig {
 			}
 		}
 		return $res;
+	}
+
+}
+
+/**
+ * Canto subclass for Latin Wikisource
+ */
+class LatinCanto extends Canto {
+
+	public function __construct( $cantica, $num, $lang = WS_ORIG_LANG ) {
+		parent::__construct( $cantica, $num, $lang );
+		static::$cleanings += [
+			// remove line numbers and italic marks
+			'/^(\d+[\.\,]?\s+)?\'\'|\'\'$/m' => '',
+		];
 	}
 
 }
