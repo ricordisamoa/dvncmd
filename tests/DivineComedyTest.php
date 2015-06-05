@@ -38,4 +38,18 @@ class DivineComedyTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame( $result, $expected );
 	}
 
+	public function testLatin() {
+		$inferno = new Cantica( 'Inferno', 'la' );
+		$first_canto = $inferno->getCanto( 1 );
+		$result = $first_canto->getLines( 12, 16 );
+		$expected = [
+			'Veni claudentis vallem, quae corda timore',
+			'Foderat, ad Superos attollens lumina, vidi',
+			'Iam terga istius radiis induta planetae,',
+			'Qui pede inoffenso callem docet ire per omnem',
+			'Sic mihi tunc aliqua formido ex parte quievit,'
+		];
+		$this->assertSame( $result, $expected );
+	}
+
 }
