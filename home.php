@@ -27,12 +27,17 @@ The license file can be found at COPYING.txt (in this directory).
 <link href="//fonts.googleapis.com/css?family=IM+Fell+DW+Pica:400,400italic" rel="stylesheet" type="text/css">
 <link href="/common.css" rel="stylesheet" type="text/css">
 <link href="//upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Dante_icon.png/32px-Dante_icon.png" rel="shortcut icon" type="image/png">
-<script src="/form.js" type="text/javascript"></script>
-</head>
-<body>
 <?php
 
 require_once 'View.php';
+
+if ( !VIEW_MODE ) {
+	?><script src="/form.js" type="text/javascript"></script><?php
+}
+?>
+</head>
+<body>
+<?php
 
 if ( VIEW_MODE ) {
 	list( $cantica, $canto, $versi ) = getData( $params, $languages, $lang );
