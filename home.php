@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+<?php
+
+namespace DivineComedy;
+
+?><!DOCTYPE html>
 <html>
 <!--
 Divine Comedy link shortener - dvncmd.tk

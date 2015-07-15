@@ -1,8 +1,10 @@
 <?php
 
+namespace DivineComedy;
+
 require_once './DivineComedy.php';
 
-class DivineComedyTest extends PHPUnit_Framework_TestCase {
+class DivineComedyTest extends \PHPUnit_Framework_TestCase {
 
 	public function testNumberOfLines() {
 		$inferno = new Cantica( 'Inferno' );

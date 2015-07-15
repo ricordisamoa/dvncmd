@@ -25,6 +25,8 @@
  * @license   https://www.gnu.org/licenses/agpl-3.0.html  GNU Affero GPL
  */
 
+namespace DivineComedy;
+
 require_once 'DivineComedy.php';
 
 $params = $_GET;

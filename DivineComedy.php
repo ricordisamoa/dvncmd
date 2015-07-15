@@ -25,6 +25,8 @@
  * @license   https://www.gnu.org/licenses/agpl-3.0.html  GNU Affero GPL
  */
 
+namespace DivineComedy;
+
 // {{{ constants
 define( 'WS_API', 'http://%s.wikisource.org/w/api.php' );
 define( 'WS_PATH', 'http://%s.wikisource.org/wiki/%s' );
@@ -227,7 +229,7 @@ class Cantica extends Orig {
 	}
 
 	public function getCanto( $num ) {
-		$class = Canto::getClassName( $this->lang );
+		$class = __NAMESPACE__ . '\\' . Canto::getClassName( $this->lang );
 		return new $class( $this->name, $num, $this->lang );
 	}
 
