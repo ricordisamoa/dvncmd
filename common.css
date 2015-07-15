@@ -1,7 +1,7 @@
 /*
 Divine Comedy link shortener - dvncmd.tk
 
-Copyright © 2012-2014 by Ricordisamoa
+Copyright © 2012-2015 by Ricordisamoa
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -56,44 +56,6 @@ h1+h2 {
 	font-size: 35px;
 	font-style: normal;
 	text-shadow: 2px 2px 2px black;
-}
-table#links td a{
-	font-size: 30px;
-	width: 200px;
-	background: red;
-	display: inline-block;
-	text-align: center;
-	height: 50px;
-	max-height: 50px;
-	line-height: 50px;
-	padding: 0;
-	margin: 0;
-	cursor: pointer;
-}
-table#links td,
-table#links td a {
-	border-radius: 30px;
-	overflow: hidden;
-}
-table#links td {
-	padding: 0;
-	height: 50px;
-	border: 0px transparent none;
-}
-table#links {
-	border-spacing: 20px;
-	border: 0px transparent none;
-	padding: 0;
-	margin: 30px;
-	display: none;
-}
-a#wikisource {
-	background: #365e86;
-	background: -moz-linear-gradient(top, #365e86 0%, #4c8bb8 50%, #407dac 51%, #93bbd5 100%);
-	background: -webkit-linear-gradient(top, #365e86 0%, #4c8bb8 50%, #407dac 51%, #93bbd5 100%);
-	background: -o-linear-gradient(top, #365e86 0%, #4c8bb8 50%, #407dac 51%, #93bbd5 100%);
-	background: -ms-linear-gradient(top, #365e86 0%, #4c8bb8 50%, #407dac 51%, #93bbd5 100%);
-	background: linear-gradient(top, #365e86 0%, #4c8bb8 50%, #407dac 51%, #93bbd5 100%);
 }
 
 section {
@@ -164,16 +126,4 @@ section a:visited {
 	float: right;
 	right: .5em;
 	margin-top: 100px;
-}
-
-a#divcom-url-copy,
-a#divcom-url-twitter,
-a#divcom-url-facebook {
-	color: white;
-	text-decoration: none;
-}
-a#divcom-url-copy.hover,
-a#divcom-url-twitter:hover,
-a#divcom-url-facebook:hover {
-	text-decoration: underline;
 }
