@@ -43,6 +43,10 @@ if ( !VIEW_MODE ) {
 <body>
 <?php
 
+function reportError( $err ) {
+	echo 'Error: ' . htmlspecialchars( $err->getMessage() );
+}
+
 $error = null;
 
 if ( VIEW_MODE ) {
@@ -65,12 +69,12 @@ echo $heading;
 <?php
 
 if ( $error !== null ) {
-	echo "Error: {$error->getMessage()}";
+	reportError( $error );
 } elseif ( VIEW_MODE ) {
 	try {
 		echo getBody( $cantica, $canto, $versi );
 	} catch ( DivineComedyException $err ) {
-		echo "Error: {$err->getMessage()}";
+		reportError( $err );
 	}
 } else {
 
