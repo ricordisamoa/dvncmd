@@ -54,4 +54,16 @@ class DivineComedyTest extends \PHPUnit_Framework_TestCase {
 		$this->assertSame( $result, $expected );
 	}
 
+	public function testRussian() {
+		$purgatorio = new Cantica( 'Purgatorio', 'ru' );
+		$second_canto = $purgatorio->getCanto( 2 );
+		$result = $second_canto->getLines( 7, 9 );
+		$expected = [
+			'Такъ что Авроры свѣтлый ликъ предъ нами',
+			'Изъ бѣлаго сталъ алымъ и потомъ',
+			'Оранжевымъ, состарившись съ часами.'
+		];
+		$this->assertSame( $result, $expected );
+	}
+
 }
