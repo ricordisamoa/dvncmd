@@ -21,7 +21,7 @@
  * The license file can be found at COPYING.txt (in this directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2014 Ricordisamoa
+ * @copyright 2012-2015 Ricordisamoa
  * @license   https://www.gnu.org/licenses/agpl-3.0.html  GNU Affero GPL
  */
 
@@ -274,6 +274,8 @@ class Canto extends Orig {
 		switch ( $lang ) {
 			case 'la':
 				return 'LatinCanto';
+			case 'ru':
+				return 'RussianCanto';
 			default:
 				return 'Canto';
 		}
@@ -339,13 +341,12 @@ class Canto extends Orig {
 	}
 
 	/**
-	 * Returns the content of the current Canto, after stripping all but lines of poetry.
+	 * Returns the content of a Canto, after stripping all but lines of poetry.
 	 *
+	 * @param string $content the content to clean
 	 * @return string
 	 */
-	protected function getCleanContent() {
-		$content = $this->getContent();
-
+	protected static function getCleanContentStatic( $content ) {
 		// apply standard replacements
 		// TODO: is preg_replace() with arrays faster?
 		foreach ( self::$cleanings as $from => $to ) {
@@ -353,6 +354,15 @@ class Canto extends Orig {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Returns the content of the current Canto, after stripping all but lines of poetry.
+	 *
+	 * @return string
+	 */
+	protected function getCleanContent() {
+		return static::getCleanContentStatic( $this->getContent() );
 	}
 
 	/**
@@ -428,6 +438,32 @@ class LatinCanto extends Canto {
 			// remove line numbers and italic marks
 			'/^(\d+[\.\,]?\s+)?\'\'|\'\'$/m' => '',
 		];
+	}
+
+}
+
+/**
+ * Canto subclass for Russian Wikisource
+ */
+class RussianCanto extends Canto {
+
+	protected static function getCleanContentStatic( $content ) {
+		$lines = explode( "\n", $content );
+		$newLines = [];
+		$inPoem = false;
+		foreach ( $lines as $line ) {
+			if ( strpos( $line, '{{poem-on' ) !== false ) {
+				$inPoem = true;
+				continue;
+			}
+			if ( strpos( $line, '{{poem-off' ) !== false ) {
+				break;
+			}
+			if ( $inPoem ) {
+				$newLines[] = preg_replace( '/<\/span>$/', '', $line );
+			}
+		}
+		return parent::getCleanContentStatic( implode( "\n", $newLines ) );
 	}
 
 }
