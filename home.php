@@ -43,8 +43,14 @@ if ( !VIEW_MODE ) {
 <body>
 <?php
 
+$error = null;
+
 if ( VIEW_MODE ) {
-	list( $cantica, $canto, $versi ) = getData( $params, $languages, $lang );
+	try {
+		list( $cantica, $canto, $versi ) = getData( $params, $languages, $lang );
+	} catch ( DivineComedyException $err ) {
+		$error = $err;
+	}
 }
 
 ?>
@@ -58,8 +64,14 @@ echo $heading;
 </header>
 <?php
 
-if ( VIEW_MODE ) {
-	echo getBody( $cantica, $canto, $versi );
+if ( $error !== null ) {
+	echo "Error: {$error->getMessage()}";
+} elseif ( VIEW_MODE ) {
+	try {
+		echo getBody( $cantica, $canto, $versi );
+	} catch ( DivineComedyException $err ) {
+		echo "Error: {$err->getMessage()}";
+	}
 } else {
 
 ?>

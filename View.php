@@ -52,30 +52,30 @@ function getData( $params, $languages, $lang ) {
 	if ( isset( Cantica::$names[$cantica] ) ) {
 		$cantica = new Cantica( Cantica::$names[$cantica], $lang );
 	} else {
-		die( 'No cantica, no party!' );
+		throw new DivineComedyException( 'no valid cantica provided' );
 	}
 
 	$canto = substr( $parts[0], 1 );
 	if ( !is_numeric( $canto ) ) {
-		die( 'Invalid canto!' );
+		throw new DivineComedyException( 'invalid canto' );
 	}
 	$canto = $cantica->getCanto( intval( $canto ) );
 
 	$versi = explode( '-', $parts[1] );
 	if ( count( $versi ) < 1 || count( $versi ) > 2 ) {
-		die( 'Error: must specify 1 or 2 line numbers!' );
+		throw new DivineComedyException( '1 or 2 line numbers must be specified' );
 	}
 	if ( count( $versi ) == 1 ) {
 		$versi[1] = $versi[0];
 	}
 	if ( !is_numeric( $versi[0] ) || !is_numeric( $versi[1] ) ) {
-		die( 'The line numbers must be integer!' );
+		throw new DivineComedyException( 'line numbers must be integers' );
 	}
 
 	$versi = array_map( 'intval', $versi );
 
 	if ( $versi[1] - $versi[0] > 11 ) {
-		die( 'Error: exceeded maximum absolute number of lines (12)!' );
+		throw new DivineComedyException( 'exceeded maximum absolute number of lines (12)' );
 	}
 
 	echo $canto->getLanglinkFlags( $query );

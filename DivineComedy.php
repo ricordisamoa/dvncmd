@@ -105,6 +105,11 @@ foreach ( $languages_query as $language ) {
 	$languages[$language['code']] = $language['*'];
 }
 
+/**
+ * Base class for all DivineComedy exceptions.
+ */
+class DivineComedyException extends \Exception {
+}
 
 /**
  * A simple class representing a Wikisource page in original language (Italian)
@@ -365,10 +370,12 @@ class Canto extends Orig {
 		if ( $begin !== null and $end !== null ) {
 			// select desired lines only
 			if ( $begin > $end ) {
-				die( 'Error: $begin cannot be greater than $end' );
+				throw new DivineComedyException( '$begin cannot be greater than $end' );
 			}
 			if ( $end > count( $lines ) ) {
-				die( sprintf( 'Error: exceeded number of lines in this canto: %d', count( $content ) ) );
+				throw new DivineComedyException( sprintf(
+					'exceeded number of lines in this canto: %d', count( $lines )
+				) );
 			}
 			$lines = array_slice( $lines, $begin - 1, $end - $begin + 1 );
 		}
