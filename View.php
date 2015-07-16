@@ -21,7 +21,7 @@
  * The license file can be found at COPYING.txt (in this directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2014 Ricordisamoa
+ * @copyright 2012-2015 Ricordisamoa
  * @license   https://www.gnu.org/licenses/agpl-3.0.html  GNU Affero GPL
  */
 
@@ -90,7 +90,7 @@ function getBody( $cantica, $canto, $versi ) {
 
 	$res .= "<section><h2>{$cantica->name}, canto {$canto->num}, vers" .
 		( count( $lines ) == 1 ? 'o ' . $versi[0] : 'i ' . implode( $versi, '-' ) ) .
-		'</h2><blockquote>' . implode( $lines, '<br>' ) .
+		'</h2><blockquote>' . implode( array_map( 'htmlspecialchars', $lines ), '<br>' ) .
 		"</blockquote><small>Text from <a href=\"{$canto->url}\">Wikisource</a></small></section>";
 
 	foreach ( $canto->getImages() as $i => $img ) {
