@@ -3,10 +3,7 @@ php:
   - 5.6
   - 5.5
   - 5.4
-before_script:
-  - pear install PHP_CodeSniffer
-  - phpenv rehash
-  - git clone https://git.wikimedia.org/git/mediawiki/tools/codesniffer.git /home/travis/build/codesniffer
+before_script: composer install
 script:
-  - phpcs . --standard=/home/travis/build/codesniffer/MediaWiki/ruleset.xml --ignore=home.php
+  - composer test
   - phpunit tests
