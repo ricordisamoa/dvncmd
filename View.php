@@ -19,7 +19,7 @@
  * The license file can be found at COPYING.txt (in this directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2015 Ricordisamoa
+ * @copyright 2012-2016 Ricordisamoa
  * @license   https://www.gnu.org/licenses/agpl-3.0.html  GNU Affero GPL
  */
 
@@ -42,7 +42,7 @@ if ( isset( $lang ) && isset( $titles[$lang] ) ) {
 	$heading = $titles['en'];
 }
 
-function getData( $params, $languages, $lang ) {
+function getData( $params, $lang ) {
 	$query = $params['q'];
 	$parts = explode( ',', $query );
 

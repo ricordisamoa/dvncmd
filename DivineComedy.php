@@ -19,7 +19,7 @@
  * The license file can be found at COPYING.txt (in this directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2015 Ricordisamoa
+ * @copyright 2012-2016 Ricordisamoa
  * @license   https://www.gnu.org/licenses/agpl-3.0.html  GNU Affero GPL
  */
 
@@ -87,20 +87,6 @@ function getApi( $api, $data ) {
 	$params = http_build_query( $data );
 	$res = file_get_contents( $api . '?' . $params );
 	return json_decode( $res, true );
-}
-
-$languages = [];
-$languages_query = getApi(
-	WS_ORIG_API,
-	[
-		'action' => 'query',
-		'meta'   => 'siteinfo',
-		'siprop' => 'languages'
-	]
-);
-$languages_query = $languages_query['query']['languages'];
-foreach ( $languages_query as $language ) {
-	$languages[$language['code']] = $language['*'];
 }
 
 /**

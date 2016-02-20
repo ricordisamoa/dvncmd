@@ -7,7 +7,7 @@ namespace DivineComedy;
 <!--
 Divine Comedy link shortener - dvncmd.tk
 
-Copyright © 2012-2014 by Ricordisamoa
+Copyright © 2012-2016 by Ricordisamoa
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,7 @@ $error = null;
 
 if ( VIEW_MODE ) {
 	try {
-		list( $cantica, $canto, $versi ) = getData( $params, $languages, $lang );
+		list( $cantica, $canto, $versi ) = getData( $params, $lang );
 	} catch ( DivineComedyException $err ) {
 		$error = $err;
 	}
