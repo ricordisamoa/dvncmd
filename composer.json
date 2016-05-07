@@ -5,7 +5,7 @@
 	},
 	"scripts": {
 		"test": [
-			"phpcs . --standard=vendor/mediawiki/mediawiki-codesniffer/MediaWiki --ignore=vendor --ignore=home.php",
+			"phpcs",
 			"phpunit tests"
 		]
 	}
