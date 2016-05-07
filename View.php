@@ -78,7 +78,7 @@ function getData( $params, $lang ) {
 
 	echo $canto->getLanglinkFlags( $query );
 
-	return [$cantica, $canto, $versi];
+	return [ $cantica, $canto, $versi ];
 }
 
 function getBody( $cantica, $canto, $versi ) {

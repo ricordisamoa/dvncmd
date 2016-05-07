@@ -70,9 +70,11 @@ $titles = [
  */
 function romanize( $num ) {
 	$digits = str_split( strval( $num ) );
-	$key = ['', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM',
+	$key = [
+		'', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM',
 		'', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC',
-		'', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+		'', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'
+	];
 	$roman = '';
 	$i = 3;
 	while ( $i-- ) {
@@ -106,26 +108,26 @@ abstract class Orig {
 		$this->orig = $orig;
 	}
 
-	private static $flag_formats = ['Flag of %s.svg', 'Nuvola %s flag.svg'];
+	private static $flag_formats = [ 'Flag of %s.svg', 'Nuvola %s flag.svg' ];
 	private static $flag_langs = [
-		'ca' => ['Catalonia',          'Catalonia'],
-		'cs' => ['the Czech Republic', 'Czech'],
-		'de' => ['Germany',            'German'],
-		'el' => ['Greece',             'Greek'],
-		'en' => ['the United Kingdom', 'English language'],
-		'es' => ['Spain',              'Spain'],
-		'et' => ['Estonia',            'Estonian'],
-		'fi' => ['Finland',            'Finnish'],
-		'fr' => ['France',             'France'],
-		'it' => ['Italy',              'Italy'],
-		'la' => ['the Vatican City',   'Vatican'], // only Vatican?
-		'no' => ['Norway',             'Norwegian'],
-		'pl' => ['Poland',             'Polish'],
-		'pt' => ['Portugal',           'Portuguese'],
-		'ro' => ['Romania',            'Romanian'],
-		'ru' => ['Russia',             'Russian'],
-		'sl' => ['Slovenia',           'Slovenian'],
-		'sv' => ['Sweden',             'Swedish'],
+		'ca' => [ 'Catalonia',          'Catalonia' ],
+		'cs' => [ 'the Czech Republic', 'Czech' ],
+		'de' => [ 'Germany',            'German' ],
+		'el' => [ 'Greece',             'Greek' ],
+		'en' => [ 'the United Kingdom', 'English language' ],
+		'es' => [ 'Spain',              'Spain' ],
+		'et' => [ 'Estonia',            'Estonian' ],
+		'fi' => [ 'Finland',            'Finnish' ],
+		'fr' => [ 'France',             'France' ],
+		'it' => [ 'Italy',              'Italy' ],
+		'la' => [ 'the Vatican City',   'Vatican' ], // only Vatican?
+		'no' => [ 'Norway',             'Norwegian' ],
+		'pl' => [ 'Poland',             'Polish' ],
+		'pt' => [ 'Portugal',           'Portuguese' ],
+		'ro' => [ 'Romania',            'Romanian' ],
+		'ru' => [ 'Russia',             'Russian' ],
+		'sl' => [ 'Slovenia',           'Slovenian' ],
+		'sv' => [ 'Sweden',             'Swedish' ],
 	];
 
 	/**
@@ -214,7 +216,7 @@ class Cantica extends Orig {
 	}
 
 	public function numberOfCantos() {
-		return in_array( $this->name, ['Purgatorio', 'Paradiso'] ) ? 33 : 34;
+		return in_array( $this->name, [ 'Purgatorio', 'Paradiso' ] ) ? 33 : 34;
 	}
 
 	public function getCanto( $num ) {
