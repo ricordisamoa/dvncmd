@@ -4,8 +4,5 @@ group: beta
 language: php
 php:
   - 7.0
-  - hhvm
-before_script:
-  - composer install
-  - if [[ $TRAVIS_PHP_VERSION = hhv* ]]; then echo hhvm.php7.all=1 >> /etc/hhvm/php.ini; fi
+before_script: composer install
 script: composer test
