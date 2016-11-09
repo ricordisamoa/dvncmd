@@ -68,7 +68,7 @@ $titles = [
  * @copyright 2008 Steven Levithan, 2012 Ricordisamoa
  * @license   http://opensource.org/licenses/MIT  MIT License
  */
-function romanize( $num ) {
+function romanize( int $num ) : string {
 	$digits = str_split( strval( $num ) );
 	$key = [
 		'', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM',
@@ -84,7 +84,7 @@ function romanize( $num ) {
 	return implode( array_fill( 0, intval( implode( $digits, '' ) ) + 1, '' ), 'M' ) . $roman;
 }
 
-function getApi( $api, $data ) {
+function getApi( string $api, $data ) {
 	$data['format'] = 'json';
 	$params = http_build_query( $data );
 	$res = file_get_contents( $api . '?' . $params );
@@ -138,7 +138,7 @@ abstract class Orig {
 	 *
 	 * @return string the title of the flag image
 	 */
-	public static function getFlag( $lang, $index = 1 ) {
+	public static function getFlag( string $lang, int $index = 1 ) {
 		if ( isset( self::$flag_langs[$lang] ) ) {
 			$flag = sprintf( self::$flag_formats[$index], self::$flag_langs[$lang][$index] );
 			return str_replace( ' ', '_', $flag );
@@ -210,7 +210,7 @@ class Cantica extends Orig {
 	public $name;
 	public $lang;
 
-	public function __construct( $name, $lang = WS_ORIG_LANG ) {
+	public function __construct( string $name, string $lang = WS_ORIG_LANG ) {
 		$this->name = $name;
 		$this->lang = $lang;
 	}
@@ -219,7 +219,7 @@ class Cantica extends Orig {
 		return in_array( $this->name, [ 'Purgatorio', 'Paradiso' ] ) ? 33 : 34;
 	}
 
-	public function getCanto( $num ) {
+	public function getCanto( int $num ) : Canto {
 		$class = __NAMESPACE__ . '\\' . Canto::getClassName( $this->lang );
 		return new $class( $this->name, $num, $this->lang );
 	}
@@ -256,7 +256,7 @@ class Canto extends Orig {
 		);
 	}
 
-	public static function getClassName( $lang ) {
+	public static function getClassName( string $lang ) : string {
 		switch ( $lang ) {
 			case 'la':
 				return 'LatinCanto';
