@@ -42,7 +42,7 @@ if ( isset( $lang ) && isset( $titles[$lang] ) ) {
 	$heading = $titles['en'];
 }
 
-function getData( $params, $lang ) {
+function getData( array $params, string $lang ) : array {
 	$query = $params['q'];
 	$parts = explode( ',', $query );
 
@@ -81,7 +81,7 @@ function getData( $params, $lang ) {
 	return [ $cantica, $canto, $versi ];
 }
 
-function getBody( $cantica, $canto, $versi ) {
+function getBody( Cantica $cantica, Canto $canto, array $versi ) : string {
 
 	$res = '';
 	$lines = $canto->getLines( $versi[0], $versi[1] );

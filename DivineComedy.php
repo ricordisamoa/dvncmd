@@ -84,7 +84,7 @@ function romanize( int $num ) : string {
 	return implode( array_fill( 0, intval( implode( $digits, '' ) ) + 1, '' ), 'M' ) . $roman;
 }
 
-function getApi( string $api, $data ) {
+function getApi( string $api, array $data ) {
 	$data['format'] = 'json';
 	$params = http_build_query( $data );
 	$res = file_get_contents( $api . '?' . $params );
@@ -104,7 +104,7 @@ class DivineComedyException extends \Exception {
  */
 abstract class Orig {
 
-	public function __construct( $orig ) {
+	public function __construct( string $orig ) {
 		$this->orig = $orig;
 	}
 
@@ -145,7 +145,7 @@ abstract class Orig {
 		}
 	}
 
-	public function getLanglinks() {
+	public function getLanglinks() : array {
 		$res = getApi(
 			WS_ORIG_API,
 			[
@@ -164,7 +164,7 @@ abstract class Orig {
 		return $langlinks;
 	}
 
-	public function getLanglinkFlags( $query ) {
+	public function getLanglinkFlags( string $query ) : string {
 		$lls = $this->getLanglinks();
 		$lls[WS_ORIG_LANG] = $this->orig;
 		unset( $lls['fr'] ); // the French version is in prose
@@ -215,7 +215,7 @@ class Cantica extends Orig {
 		$this->lang = $lang;
 	}
 
-	public function numberOfCantos() {
+	public function numberOfCantos() : int {
 		return in_array( $this->name, [ 'Purgatorio', 'Paradiso' ] ) ? 33 : 34;
 	}
 
@@ -233,7 +233,7 @@ class Cantica extends Orig {
  */
 class Canto extends Orig {
 
-	public function __construct( $cantica, $num, $lang = WS_ORIG_LANG ) {
+	public function __construct( string $cantica, int $num, string $lang = WS_ORIG_LANG ) {
 		$this->cantica = $cantica;
 		$this->num = $num;
 		$this->lang = $lang;
@@ -359,7 +359,7 @@ class Canto extends Orig {
 	 *
 	 * @return array
 	 */
-	public function getLines( $begin = null, $end = null ) {
+	public function getLines( int $begin = null, int $end = null ) : array {
 		// split the text into lines
 		$content = $this->getCleanContent();
 		$lines = explode( "\n", $content );
@@ -383,7 +383,7 @@ class Canto extends Orig {
 	 *
 	 * @return array
 	 */
-	public function getImages() {
+	public function getImages() : array {
 		$images = getApi(
 			COMMONS_API,
 			[
@@ -418,7 +418,7 @@ class Canto extends Orig {
  */
 class LatinCanto extends Canto {
 
-	public function __construct( $cantica, $num, $lang = WS_ORIG_LANG ) {
+	public function __construct( string $cantica, int $num, string $lang = WS_ORIG_LANG ) {
 		parent::__construct( $cantica, $num, $lang );
 		static::$cleanings += [
 			// remove line numbers and italic marks
