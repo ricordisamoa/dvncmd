@@ -4,5 +4,6 @@ group: beta
 language: php
 php:
   - 7.0
+  - 7.1
 before_script: composer install
 script: composer test
