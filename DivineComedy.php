@@ -220,7 +220,7 @@ class Cantica extends Orig {
 	}
 
 	public function getCanto( int $num ) : Canto {
-		$class = __NAMESPACE__ . '\\' . Canto::getClassName( $this->lang );
+		$class = Canto::getClassName( $this->lang );
 		return new $class( $this->name, $num, $this->lang );
 	}
 
@@ -259,11 +259,11 @@ class Canto extends Orig {
 	public static function getClassName( string $lang ) : string {
 		switch ( $lang ) {
 			case 'la':
-				return 'LatinCanto';
+				return LatinCanto::class;
 			case 'ru':
-				return 'RussianCanto';
+				return RussianCanto::class;
 			default:
-				return 'Canto';
+				return Canto::class;
 		}
 	}
 
