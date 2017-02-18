@@ -149,17 +149,17 @@ abstract class Orig {
 		$res = getApi(
 			WS_ORIG_API,
 			[
-				'action'  => 'query',
-				'prop'    => 'langlinks',
+				'action' => 'query',
+				'formatversion' => 2,
+				'prop' => 'langlinks',
 				'lllimit' => 'max',
-				'titles'  => $this->orig
+				'titles' => $this->orig
 			]
 		);
-		$res = $res['query']['pages'];
-		$res = $res[array_keys( $res )[0]]['langlinks'];
+		$res = $res['query']['pages'][0]['langlinks'];
 		$langlinks = [];
 		foreach ( $res as $ll ) {
-			$langlinks[$ll['lang']] = $ll['*'];
+			$langlinks[$ll['lang']] = $ll['title'];
 		}
 		return $langlinks;
 	}
