@@ -207,18 +207,40 @@ class Cantica extends Orig {
 		'd' => 'Paradiso'
 	];
 
+	/**
+	 * @var string The name of the cantica
+	 */
 	public $name;
+
+	/**
+	 * @var string The language code of the cantica
+	 */
 	public $lang;
 
+	/**
+	 * @param string $name The name of the cantica
+	 * @param string $lang The language code of the cantica
+	 */
 	public function __construct( string $name, string $lang = WS_ORIG_LANG ) {
 		$this->name = $name;
 		$this->lang = $lang;
 	}
 
+	/**
+	 * Get the number of cantos in the cantica.
+	 *
+	 * @return int The number of cantos in the cantica
+	 */
 	public function numberOfCantos() : int {
 		return in_array( $this->name, [ 'Purgatorio', 'Paradiso' ] ) ? 33 : 34;
 	}
 
+	/**
+	 * Get an instance of Canto.
+	 *
+	 * @param int $num The number of the canto
+	 * @return Canto The instance of Canto
+	 */
 	public function getCanto( int $num ) : Canto {
 		$class = Canto::getClassName( $this->lang );
 		return new $class( $this->name, $num, $this->lang );
@@ -233,6 +255,11 @@ class Cantica extends Orig {
  */
 class Canto extends Orig {
 
+	/**
+	 * @param string $cantica The name of the cantica
+	 * @param int $num The number of the canto
+	 * @param string $lang The language code of the canto
+	 */
 	public function __construct( string $cantica, int $num, string $lang = WS_ORIG_LANG ) {
 		$this->cantica = $cantica;
 		$this->num = $num;
@@ -256,6 +283,12 @@ class Canto extends Orig {
 		);
 	}
 
+	/**
+	 * Get the name of the class suitable for representing cantos by language.
+	 *
+	 * @param string $lang The language code
+	 * @return string The class name
+	 */
 	public static function getClassName( string $lang ) : string {
 		switch ( $lang ) {
 			case 'la':
