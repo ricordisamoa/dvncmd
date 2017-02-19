@@ -25,6 +25,8 @@
 
 namespace DivineComedy;
 
+use MessageFormatter;
+
 class DivineComedyView {
 
 	private static $titles = [
@@ -42,6 +44,11 @@ class DivineComedyView {
 		'ro' => 'Divina Comedie',
 		'ru' => 'Божественная комедия',
 		'sl' => 'Božanska komedija'
+	];
+
+	private static $sectionTitles = [
+		'en' => '{0, plural, one {{1}, canto {2}, line {3}} other {{1}, canto {2}, lines {3}-{4}}}',
+		'it' => '{0, plural, one {{1}, canto {2}, verso {3}} other {{1}, canto {2}, versi {3}-{4}}}'
 	];
 
 	/**
@@ -170,6 +177,20 @@ class DivineComedyView {
 	}
 
 	/**
+	 * Get the ICU message formatter for the section title.
+	 *
+	 * @return MessageFormatter ICU message formatter
+	 */
+	public function getSectionTitleMessageFormatter() : MessageFormatter {
+		if ( isset( self::$sectionTitles[$this->lang] ) ) {
+			$lang = $this->lang;
+		} else {
+			$lang = 'en';
+		}
+		return new MessageFormatter( $lang, self::$sectionTitles[$lang] );
+	}
+
+	/**
 	 * Get the body.
 	 *
 	 * @return string HTML
@@ -178,11 +199,18 @@ class DivineComedyView {
 		$res = '';
 		$lines = $this->canto->getLines( $this->versi[0], $this->versi[1] );
 
-		$res .= "<section><h2>{$this->cantica->getName()}, canto {$this->canto->getNum()}, vers" .
-			( count( $lines ) == 1 ? 'o ' . $this->versi[0] : 'i ' . implode( $this->versi, '-' ) ) .
-			'</h2><blockquote>' . implode( array_map( 'htmlspecialchars', $lines ), '<br>' ) .
-			"</blockquote><small>Text from <a href=\"{$this->canto->getUrl()}\">Wikisource</a>" .
-			'</small></section>';
+		$sectionTitle = htmlspecialchars( $this->getSectionTitleMessageFormatter()->format( [
+			count( $lines ),
+			$this->cantica->getName(),
+			$this->canto->getNum(),
+			$this->versi[0],
+			$this->versi[1]
+		] ) );
+		$lines = implode( array_map( 'htmlspecialchars', $lines ), '<br>' );
+		$cantoUrl = htmlspecialchars( $this->canto->getUrl() );
+
+		$res .= "<section><h2>$sectionTitle</h2><blockquote>$lines</blockquote>" .
+			"<small>Text from <a href=\"$cantoUrl\">Wikisource</a></small></section>";
 
 		foreach ( $this->canto->getImages() as $i => $img ) {
 			$res .= "<a href=\"{$img['descriptionurl']}\"><img alt=\"{$img['title']}\"" .
