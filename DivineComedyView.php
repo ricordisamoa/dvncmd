@@ -181,7 +181,7 @@ class DivineComedyView {
 	 *
 	 * @return MessageFormatter ICU message formatter
 	 */
-	public function getSectionTitleMessageFormatter() : MessageFormatter {
+	private function getSectionTitleMessageFormatter() : MessageFormatter {
 		if ( isset( self::$sectionTitles[$this->lang] ) ) {
 			$lang = $this->lang;
 		} else {
