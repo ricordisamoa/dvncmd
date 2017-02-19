@@ -2,12 +2,15 @@
 
 namespace DivineComedy;
 
+require_once 'DivineComedy.php';
+require_once 'DivineComedyView.php';
+
 ?><!DOCTYPE html>
 <html>
 <!--
 Divine Comedy link shortener - dvncmd.tk
 
-Copyright © 2012-2016 by Ricordisamoa
+Copyright © 2012-2017 by Ricordisamoa
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -33,9 +36,9 @@ The license file can be found at COPYING.txt (in this directory).
 <link href="//upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Dante_icon.png/32px-Dante_icon.png" rel="shortcut icon" type="image/png">
 <?php
 
-require_once 'View.php';
+$view = new DivineComedyView( $_GET );
 
-if ( !VIEW_MODE ) {
+if ( !$view->isViewMode() ) {
 	?><script src="/form.js" type="text/javascript"></script><?php
 }
 ?>
@@ -43,15 +46,16 @@ if ( !VIEW_MODE ) {
 <body>
 <?php
 
-function reportError( $err ) {
+function reportError( \Exception $err ) {
 	echo 'Error: ' . htmlspecialchars( $err->getMessage() );
 }
 
 $error = null;
 
-if ( VIEW_MODE ) {
+if ( $view->isViewMode() ) {
 	try {
-		list( $cantica, $canto, $versi ) = getData( $params, $lang );
+		$view->parseQuery();
+		echo $view->getLanglinkFlags();
 	} catch ( DivineComedyException $err ) {
 		$error = $err;
 	}
@@ -61,7 +65,7 @@ if ( VIEW_MODE ) {
 <header>
 <h1><?php
 
-echo $heading;
+echo $view->getHeading();
 
 ?></h1>
 <h2>link shortener</h2>
@@ -70,9 +74,9 @@ echo $heading;
 
 if ( $error !== null ) {
 	reportError( $error );
-} elseif ( VIEW_MODE ) {
+} elseif ( $view->isViewMode() ) {
 	try {
-		echo getBody( $cantica, $canto, $versi );
+		echo $view->getBody();
 	} catch ( DivineComedyException $err ) {
 		reportError( $err );
 	}

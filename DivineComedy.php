@@ -19,7 +19,7 @@
  * The license file can be found at COPYING.txt (in this directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2016 Ricordisamoa
+ * @copyright 2012-2017 Ricordisamoa
  * @license   https://www.gnu.org/licenses/agpl-3.0.html  GNU Affero GPL
  */
 
@@ -38,23 +38,6 @@ define( 'COMMONS_CAT_PATH', 'Category:%s Canto %02d' );
 define( 'IMG_WIDTH', 1600 );
 define( 'IMG_HEIGHT', 160 );
 // }}}
-
-$titles = [
-	'ca' => 'La Divina Comèdia',
-	'cs' => 'Božská komedie',
-	'el' => 'Θεία Κωμωδία',
-	'en' => 'Divine Comedy',
-	'es' => 'La Divina Comedia',
-	'fi' => 'Jumalaisesta näytelmästä',
-	'fr' => 'La Divine Comédie',
-	'it' => 'Divina Commedia',
-	'la' => 'Divina Comoedia',
-	'pl' => 'Boska Komedia',
-	'pt' => 'A Divina Comédia',
-	'ro' => 'Divina Comedie',
-	'ru' => 'Божественная комедия',
-	'sl' => 'Božanska komedija'
-];
 
 /**
  * Convert an integer into a Roman numeral
