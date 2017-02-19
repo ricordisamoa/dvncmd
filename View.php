@@ -86,10 +86,10 @@ function getBody( Cantica $cantica, Canto $canto, array $versi ) : string {
 	$res = '';
 	$lines = $canto->getLines( $versi[0], $versi[1] );
 
-	$res .= "<section><h2>{$cantica->getName()}, canto {$canto->num}, vers" .
+	$res .= "<section><h2>{$cantica->getName()}, canto {$canto->getNum()}, vers" .
 		( count( $lines ) == 1 ? 'o ' . $versi[0] : 'i ' . implode( $versi, '-' ) ) .
 		'</h2><blockquote>' . implode( array_map( 'htmlspecialchars', $lines ), '<br>' ) .
-		"</blockquote><small>Text from <a href=\"{$canto->url}\">Wikisource</a></small></section>";
+		"</blockquote><small>Text from <a href=\"{$canto->getUrl()}\">Wikisource</a></small></section>";
 
 	foreach ( $canto->getImages() as $i => $img ) {
 		$res .= "<a href=\"{$img['descriptionurl']}\"><img alt=\"{$img['title']}\"" .

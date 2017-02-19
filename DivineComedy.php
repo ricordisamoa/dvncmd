@@ -109,6 +109,11 @@ abstract class Orig {
 	 */
 	protected $orig;
 
+	/**
+	 * @var string The language code of the page
+	 */
+	protected $lang = 'it';
+
 	public function __construct( string $orig ) {
 		$this->orig = $orig;
 	}
@@ -218,11 +223,6 @@ class Cantica extends Orig {
 	private $name;
 
 	/**
-	 * @var string The language code of the cantica
-	 */
-	private $lang;
-
-	/**
 	 * @param string $name The name of the cantica
 	 * @param string $lang The language code of the cantica
 	 */
@@ -268,6 +268,36 @@ class Cantica extends Orig {
  * Should be instantiated by Cantica only.
  */
 class Canto extends Orig {
+
+	/**
+	 * @var string The name of the cantica
+	 */
+	private $cantica;
+
+	/**
+	 * @var int The number of the canto
+	 */
+	private $num;
+
+	/**
+	 * @var string The title of the Commons category of the canto
+	 */
+	private $commonsCat;
+
+	/**
+	 * @var string The URL of the API endpoint of the localized Wikisource edition
+	 */
+	private $api;
+
+	/**
+	 * @var string The title of the Wikisource page in current language
+	 */
+	private $title;
+
+	/**
+	 * @var string The URL of the Wikisource page in current language
+	 */
+	private $url;
 
 	/**
 	 * @param string $cantica The name of the cantica
@@ -344,6 +374,24 @@ class Canto extends Orig {
 		// remove superfluous line-breaks
 		'/\s*(<br\s?\/?>\s*)*\n+/' => "\n",
 	];
+
+	/**
+	 * Get the number of the canto.
+	 *
+	 * @return int The number of the canto
+	 */
+	public function getNum() : int {
+		return $this->num;
+	}
+
+	/**
+	 * Get the URL of the Wikisource page in current language.
+	 *
+	 * @return string The URL of the Wikisource page in current language
+	 */
+	public function getUrl() : string {
+		return $this->url;
+	}
 
 	/**
 	 * Returns the raw content of the Wikisource page for the current Canto.
