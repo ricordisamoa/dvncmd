@@ -104,6 +104,11 @@ class DivineComedyException extends \Exception {
  */
 abstract class Orig {
 
+	/**
+	 * @var string The title of the page in original language
+	 */
+	protected $orig;
+
 	public function __construct( string $orig ) {
 		$this->orig = $orig;
 	}
