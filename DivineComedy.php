@@ -210,12 +210,12 @@ class Cantica extends Orig {
 	/**
 	 * @var string The name of the cantica
 	 */
-	public $name;
+	private $name;
 
 	/**
 	 * @var string The language code of the cantica
 	 */
-	public $lang;
+	private $lang;
 
 	/**
 	 * @param string $name The name of the cantica
@@ -224,6 +224,15 @@ class Cantica extends Orig {
 	public function __construct( string $name, string $lang = WS_ORIG_LANG ) {
 		$this->name = $name;
 		$this->lang = $lang;
+	}
+
+	/**
+	 * Get the name of the cantica.
+	 *
+	 * @return string The name of the cantica
+	 */
+	public function getName() : string {
+		return $this->name;
 	}
 
 	/**
