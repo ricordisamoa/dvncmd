@@ -97,6 +97,9 @@ abstract class Orig {
 	 */
 	protected $lang = 'it';
 
+	/**
+	 * @param string $orig The title of the page in original language
+	 */
 	public function __construct( string $orig ) {
 		$this->orig = $orig;
 	}
@@ -124,12 +127,11 @@ abstract class Orig {
 	];
 
 	/**
-	 * Returns the appropriate flag for a language.
+	 * Get the appropriate flag for a language.
 	 *
-	 * @param string $lang the language code
-	 * @param int $index the index of the flag in $forms
-	 *
-	 * @return string the title of the flag image
+	 * @param string $lang The language code
+	 * @param int $index The index of the flag in $flag_formats
+	 * @return string|null The title of the flag image, null if not found
 	 */
 	public static function getFlag( string $lang, int $index = 1 ) {
 		if ( isset( self::$flag_langs[$lang] ) ) {
@@ -138,6 +140,11 @@ abstract class Orig {
 		}
 	}
 
+	/**
+	 * Get the language links.
+	 *
+	 * @return array Keys are language codes, values are page titles
+	 */
 	public function getLanglinks() : array {
 		$res = getApi(
 			WS_ORIG_API,
@@ -157,6 +164,12 @@ abstract class Orig {
 		return $langlinks;
 	}
 
+	/**
+	 * Get the langlink flags.
+	 *
+	 * @param string $query The raw query
+	 * @return string HTML
+	 */
 	public function getLanglinkFlags( string $query ) : string {
 		$lls = $this->getLanglinks();
 		$lls[WS_ORIG_LANG] = $this->orig;
@@ -377,7 +390,7 @@ class Canto extends Orig {
 	}
 
 	/**
-	 * Returns the raw content of the Wikisource page for the current Canto.
+	 * Get the raw content of the Wikisource page for the current Canto.
 	 *
 	 * @return string
 	 */
@@ -405,9 +418,9 @@ class Canto extends Orig {
 	}
 
 	/**
-	 * Returns the content of a Canto, after stripping all but lines of poetry.
+	 * Get the content of a Canto, after stripping all but lines of poetry.
 	 *
-	 * @param string $content the content to clean
+	 * @param string $content The content to clean
 	 * @return string
 	 */
 	protected static function getCleanContentStatic( $content ) {
@@ -421,7 +434,7 @@ class Canto extends Orig {
 	}
 
 	/**
-	 * Returns the content of the current Canto, after stripping all but lines of poetry.
+	 * Get the content of the current Canto, after stripping all but lines of poetry.
 	 *
 	 * @return string
 	 */
@@ -430,12 +443,11 @@ class Canto extends Orig {
 	}
 
 	/**
-	 * Returns the cleaned-up content of the current Canto, in form of lines.
+	 * Get the cleaned-up content of the current Canto, in form of lines.
 	 *
-	 * @param int $begin the starting line
-	 * @param int $end   the ending line
-	 *
-	 * @return array
+	 * @param int $begin The starting line
+	 * @param int $end The ending line
+	 * @return string[]
 	 */
 	public function getLines( int $begin = null, int $end = null ) : array {
 		// split the text into lines
