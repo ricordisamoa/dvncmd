@@ -453,7 +453,7 @@ class Canto extends Orig {
 		// split the text into lines
 		$content = $this->getCleanContent();
 		$lines = explode( "\n", $content );
-		if ( $begin !== null and $end !== null ) {
+		if ( $begin !== null && $end !== null ) {
 			// select desired lines only
 			if ( $begin > $end ) {
 				throw new DivineComedyException( '$begin cannot be greater than $end' );
