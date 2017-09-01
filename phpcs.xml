@@ -4,7 +4,11 @@
 		<exclude name="MediaWiki.AlternativeSyntax.PHP7UnicodeSyntax.NotAllowed" />
 		<exclude name="MediaWiki.Commenting.FunctionComment.MissingDocumentationProtected" />
 		<exclude name="MediaWiki.Commenting.FunctionComment.MissingDocumentationPublic" />
+		<exclude name="MediaWiki.Files.ClassMatchesFilename.NotMatch" />
+		<exclude name="MediaWiki.Files.OneClassPerFile.MultipleFound" />
+		<exclude name="MediaWiki.Usage.ScalarTypeHintUsage.Found" />
 		<exclude name="MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment" />
+		<exclude name="Squiz.Classes.SelfMemberReference.NotUsed" />
 	</rule>
 	<file>.</file>
 	<exclude-pattern>vendor/</exclude-pattern>
