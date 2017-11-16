@@ -202,8 +202,7 @@ class Cantica extends Orig {
 	 * @return Canto The instance of Canto
 	 */
 	public function getCanto( int $num ) : Canto {
-		$class = Canto::getClassName( $this->lang );
-		return new $class( $this->name, $num, $this->lang );
+		return new Canto( $this->name, $num, $this->lang );
 	}
 
 }
@@ -267,52 +266,20 @@ class Canto extends Orig {
 	}
 
 	/**
-	 * Get the name of the class suitable for representing cantos by language.
+	 * Get a text cleaner suitable for this canto.
 	 *
-	 * @param string $lang The language code
-	 * @return string The class name
+	 * @return TextCleaner
 	 */
-	public static function getClassName( string $lang ) : string {
-		switch ( $lang ) {
+	private function getTextCleaner() : TextCleaner {
+		switch ( $this->lang ) {
 			case 'la':
-				return LatinCanto::class;
+				return new LatinTextCleaner();
 			case 'ru':
-				return RussianCanto::class;
+				return new RussianTextCleaner();
 			default:
-				return Canto::class;
+				return new BasicTextCleaner();
 		}
 	}
-
-	protected static $cleanings = [
-		// get only text in "<poem>" tags
-		'/(^[\s\S]*<poem>[\s\n\r]*|[\s\n\r]*<\/poem>[\s\S]*$)/i' => '',
-
-		// remove images (TODO: expect any possible ns-6 alias)
-		'/\[\[\:?([Ff]ile|[Ii]mat?ge|[Ii]mmagine)\:.*?(\[\[.+?\]\].*?)*\]\]/' => '',
-
-		// other languages
-		'/^[\s\S]*<div class="verse"><pre>\s+/i' => '',
-		'/\s+<\/pre><\/div>[\s\S]*$/i' => '',
-
-		// strip <ref> tags
-		'/<ref[\s\w]*(\/|>[^<>]*<\/ref)>/i' => '',
-
-		// remove indentations and spaces at line beginning
-		'/^[:\s]*/m' => '',
-
-		// remove unprintable templates
-		'/\{\{([Oo]tsikko|[Ee]ncabezado|[Tt]itulus2)\n*\|[^\|\{\}]+(\|([^\|\{\}]+))*\}\}/' => '',
-		'/\{\{([\w\§]+)\n*\|[^\|\{\}]+\}\}/' => '',
-
-		// replace some templates with printable parts
-		'/\{\{([\w\§]+)\n*\|[^\|\{\}]+\|([^\|\{\}]+)\}\}/' => '$2',
-
-		// remove initial and final spaces
-		'/(^[\s\n\r]+|[\s\n\r]+$)/' => '',
-
-		// remove superfluous line-breaks
-		'/\s*(<br\s?\/?>\s*)*\n+/' => "\n",
-	];
 
 	/**
 	 * Get the name of the cantica.
@@ -346,26 +313,10 @@ class Canto extends Orig {
 	 *
 	 * @return string|null
 	 */
-	protected function getContent() {
+	private function getContent() {
 		$api = new ApiClient( $this->api );
 		$textProvider = new RawPageTextProvider( $api );
 		return $textProvider->getRawPageText( $this->title );
-	}
-
-	/**
-	 * Get the content of a Canto, after stripping all but lines of poetry.
-	 *
-	 * @param string $content The content to clean
-	 * @return string
-	 */
-	protected static function getCleanContentStatic( $content ) {
-		// apply standard replacements
-		// TODO: is preg_replace() with arrays faster?
-		foreach ( self::$cleanings as $from => $to ) {
-			$content = preg_replace( $from, $to, $content );
-		}
-
-		return $content;
 	}
 
 	/**
@@ -373,8 +324,8 @@ class Canto extends Orig {
 	 *
 	 * @return string
 	 */
-	protected function getCleanContent() {
-		return static::getCleanContentStatic( $this->getContent() );
+	private function getCleanContent() {
+		return $this->getTextCleaner()->getCleanText( $this->getContent() );
 	}
 
 	/**
@@ -401,47 +352,6 @@ class Canto extends Orig {
 			$lines = array_slice( $lines, $begin - 1, $end - $begin + 1 );
 		}
 		return $lines;
-	}
-
-}
-
-/**
- * Canto subclass for Latin Wikisource
- */
-class LatinCanto extends Canto {
-
-	public function __construct( string $cantica, int $num, string $lang = WS_ORIG_LANG ) {
-		parent::__construct( $cantica, $num, $lang );
-		static::$cleanings += [
-			// remove line numbers and italic marks
-			'/^(\d+[\.\,]?\s+)?\'\'|\'\'$/m' => '',
-		];
-	}
-
-}
-
-/**
- * Canto subclass for Russian Wikisource
- */
-class RussianCanto extends Canto {
-
-	protected static function getCleanContentStatic( $content ) {
-		$lines = explode( "\n", $content );
-		$newLines = [];
-		$inPoem = false;
-		foreach ( $lines as $line ) {
-			if ( strpos( $line, '{{poem-on' ) !== false ) {
-				$inPoem = true;
-				continue;
-			}
-			if ( strpos( $line, '{{poem-off' ) !== false ) {
-				break;
-			}
-			if ( $inPoem ) {
-				$newLines[] = preg_replace( '/<\/span>$/', '', $line );
-			}
-		}
-		return parent::getCleanContentStatic( implode( "\n", $newLines ) );
 	}
 
 }
