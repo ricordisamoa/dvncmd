@@ -344,27 +344,12 @@ class Canto extends Orig {
 	/**
 	 * Get the raw content of the Wikisource page for the current Canto.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	protected function getContent() {
 		$api = new ApiClient( $this->api );
-		$query = $api->get( [
-			'action'  => 'query',
-			'titles'  => $this->title,
-			'prop'    => 'revisions',
-			'rvprop'  => 'content',
-			'rvlimit' => 1
-		] );
-		$query = $query['query'];
-		if ( array_key_exists( 'pages', $query ) ) {
-			foreach ( $query['pages'] as $pageid => $page ) {
-				if ( array_key_exists( 'revisions', $page ) ) {
-					return $page['revisions'][0]['*'];
-				} else {
-					return;
-				}
-			}
-		}
+		$textProvider = new RawPageTextProvider( $api );
+		return $textProvider->getRawPageText( $this->title );
 	}
 
 	/**

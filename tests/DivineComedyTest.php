@@ -4,6 +4,7 @@ namespace DivineComedy;
 
 require_once './DivineComedy.php';
 require_once './DivineComedy/ApiClient.php';
+require_once './DivineComedy/RawPageTextProvider.php';
 
 class DivineComedyTest extends \PHPUnit\Framework\TestCase {
 
