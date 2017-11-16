@@ -29,6 +29,11 @@ use MessageFormatter;
 
 class DivineComedyView {
 
+	const COMMONS_API = 'http://commons.wikimedia.org/w/api.php';
+
+	const IMG_WIDTH = 1600;
+	const IMG_HEIGHT = 160;
+
 	private static $titles = [
 		'ca' => 'La Divina Comèdia',
 		'cs' => 'Božská komedie',
@@ -72,6 +77,11 @@ class DivineComedyView {
 	private $canto;
 
 	/**
+	 * @var CantoImagesProvider Provider of Wikimedia Commons images by canto
+	 */
+	private $cantoImagesProvider;
+
+	/**
 	 * @var int[]|null The starting and ending line numbers
 	 */
 	private $versi;
@@ -89,6 +99,9 @@ class DivineComedyView {
 		} else {
 			$this->lang = WS_ORIG_LANG;
 		}
+
+		$commonsApiClient = new ApiClient( self::COMMONS_API );
+		$this->cantoImagesProvider = new CantoImagesProvider( $commonsApiClient );
 	}
 
 	/**
@@ -212,7 +225,8 @@ class DivineComedyView {
 		$res .= "<section><h2>$sectionTitle</h2><blockquote>$lines</blockquote>" .
 			"<small>Text from <a href=\"$cantoUrl\">Wikisource</a></small></section>";
 
-		foreach ( $this->canto->getImages() as $i => $img ) {
+		$imgs = $this->cantoImagesProvider->getImages( $this->canto, self::IMG_WIDTH, self::IMG_HEIGHT );
+		foreach ( $imgs as $i => $img ) {
 			$res .= "<a href=\"{$img['descriptionurl']}\"><img alt=\"{$img['title']}\"" .
 				" src=\"{$img['thumburl']}\"></a>";
 		}

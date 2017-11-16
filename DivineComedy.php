@@ -31,12 +31,6 @@ define( 'WS_PATH', 'http://%s.wikisource.org/wiki/%s' );
 define( 'WS_ORIG_LANG', 'it' );
 define( 'WS_ORIG_API', sprintf( WS_API, WS_ORIG_LANG ) );
 define( 'WS_ORIG_PAGE_PATH', 'Divina Commedia/%s/Canto %s' );
-
-define( 'COMMONS_API', 'http://commons.wikimedia.org/w/api.php' );
-define( 'COMMONS_CAT_PATH', 'Category:%s Canto %02d' );
-
-define( 'IMG_WIDTH', 1600 );
-define( 'IMG_HEIGHT', 160 );
 // }}}
 
 /**
@@ -232,11 +226,6 @@ class Canto extends Orig {
 	private $num;
 
 	/**
-	 * @var string The title of the Commons category of the canto
-	 */
-	private $commonsCat;
-
-	/**
 	 * @var string The URL of the API endpoint of the localized Wikisource edition
 	 */
 	private $api;
@@ -260,8 +249,6 @@ class Canto extends Orig {
 		$this->cantica = $cantica;
 		$this->num = $num;
 		$this->lang = $lang;
-
-		$this->commonsCat = sprintf( COMMONS_CAT_PATH, $this->cantica, $this->num );
 
 		parent::__construct( sprintf( WS_ORIG_PAGE_PATH, $this->cantica, romanize( $num ) ) );
 		$this->api = sprintf( WS_API, $this->lang );
@@ -326,6 +313,15 @@ class Canto extends Orig {
 		// remove superfluous line-breaks
 		'/\s*(<br\s?\/?>\s*)*\n+/' => "\n",
 	];
+
+	/**
+	 * Get the name of the cantica.
+	 *
+	 * @return string The name of the cantica
+	 */
+	public function getCantica() : string {
+		return $this->cantica;
+	}
 
 	/**
 	 * Get the number of the canto.
@@ -420,37 +416,6 @@ class Canto extends Orig {
 			$lines = array_slice( $lines, $begin - 1, $end - $begin + 1 );
 		}
 		return $lines;
-	}
-
-	/**
-	 * Returns an array of images from Wikimedia Commons about the current Canto.
-	 *
-	 * @return array
-	 */
-	public function getImages() : array {
-		$api = new ApiClient( COMMONS_API );
-		$images = $api->get( [
-			'action'      => 'query',
-			'prop'        => 'imageinfo',
-			'iiprop'      => 'url',
-			'iiurlwidth'  => IMG_WIDTH,
-			'iiurlheight' => IMG_HEIGHT,
-			'generator'   => 'categorymembers',
-			'gcmtitle'    => $this->commonsCat,
-			'gcmtype'     => 'file'
-		] );
-		$res = [];
-		if ( array_key_exists( 'query', $images ) ) {
-			$images = $images['query'];
-			if ( array_key_exists( 'pages', $images ) ) {
-				foreach ( $images['pages'] as $pageid => $page ) {
-					$k = $page['imageinfo'][0];
-					$k['title'] = $page['title'];
-					$res[] = $k;
-				}
-			}
-		}
-		return $res;
 	}
 
 }
