@@ -97,42 +97,6 @@ abstract class Orig {
 		$this->orig = $orig;
 	}
 
-	private static $flag_formats = [ 'Flag of %s.svg', 'Nuvola %s flag.svg' ];
-	private static $flag_langs = [
-		'ca' => [ 'Catalonia',          'Catalonia' ],
-		'cs' => [ 'the Czech Republic', 'Czech' ],
-		'de' => [ 'Germany',            'German' ],
-		'el' => [ 'Greece',             'Greek' ],
-		'en' => [ 'the United Kingdom', 'English language' ],
-		'es' => [ 'Spain',              'Spain' ],
-		'et' => [ 'Estonia',            'Estonian' ],
-		'fi' => [ 'Finland',            'Finnish' ],
-		'fr' => [ 'France',             'France' ],
-		'it' => [ 'Italy',              'Italy' ],
-		'la' => [ 'the Vatican City',   'Vatican' ], // only Vatican?
-		'no' => [ 'Norway',             'Norwegian' ],
-		'pl' => [ 'Poland',             'Polish' ],
-		'pt' => [ 'Portugal',           'Portuguese' ],
-		'ro' => [ 'Romania',            'Romanian' ],
-		'ru' => [ 'Russia',             'Russian' ],
-		'sl' => [ 'Slovenia',           'Slovenian' ],
-		'sv' => [ 'Sweden',             'Swedish' ],
-	];
-
-	/**
-	 * Get the appropriate flag for a language.
-	 *
-	 * @param string $lang The language code
-	 * @param int $index The index of the flag in $flag_formats
-	 * @return string|null The title of the flag image, null if not found
-	 */
-	public static function getFlag( string $lang, int $index = 1 ) {
-		if ( isset( self::$flag_langs[$lang] ) ) {
-			$flag = sprintf( self::$flag_formats[$index], self::$flag_langs[$lang][$index] );
-			return str_replace( ' ', '_', $flag );
-		}
-	}
-
 	/**
 	 * Get the language links.
 	 *
@@ -174,7 +138,8 @@ abstract class Orig {
 			$ret .= '<a target="_self" href="' .
 				( $llang === WS_ORIG_LANG ? '' : ( '/' . $llang ) ) .
 				"/$query\" title=\"$ltitle\">";
-			$flag = self::getFlag( $llang );
+			$flagProvider = new NuvolaFlagProvider();
+			$flag = $flagProvider->getFlag( $llang );
 			if ( $flag !== null ) {
 				$ret .= '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/' .
 					$flag . '" alt="' . $ltitle . '">';
