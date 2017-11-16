@@ -3,6 +3,7 @@
 namespace DivineComedy;
 
 require_once './DivineComedy.php';
+require_once './DivineComedy/ApiClient.php';
 
 class DivineComedyTest extends \PHPUnit\Framework\TestCase {
 

@@ -67,13 +67,6 @@ function romanize( int $num ) : string {
 	return implode( array_fill( 0, intval( implode( $digits, '' ) ) + 1, '' ), 'M' ) . $roman;
 }
 
-function getApi( string $api, array $data ) {
-	$data['format'] = 'json';
-	$params = http_build_query( $data );
-	$res = file_get_contents( $api . '?' . $params );
-	return json_decode( $res, true );
-}
-
 /**
  * Base class for all DivineComedy exceptions.
  */
@@ -146,16 +139,14 @@ abstract class Orig {
 	 * @return array Keys are language codes, values are page titles
 	 */
 	public function getLanglinks() : array {
-		$res = getApi(
-			WS_ORIG_API,
-			[
-				'action' => 'query',
-				'formatversion' => 2,
-				'prop' => 'langlinks',
-				'lllimit' => 'max',
-				'titles' => $this->orig
-			]
-		);
+		$api = new ApiClient( WS_ORIG_API );
+		$res = $api->get( [
+			'action' => 'query',
+			'formatversion' => 2,
+			'prop' => 'langlinks',
+			'lllimit' => 'max',
+			'titles' => $this->orig
+		] );
 		$res = $res['query']['pages'][0]['langlinks'];
 		$langlinks = [];
 		foreach ( $res as $ll ) {
@@ -395,16 +386,14 @@ class Canto extends Orig {
 	 * @return string
 	 */
 	protected function getContent() {
-		$query = getApi(
-			$this->api,
-			[
-				'action'  => 'query',
-				'titles'  => $this->title,
-				'prop'    => 'revisions',
-				'rvprop'  => 'content',
-				'rvlimit' => 1
-			]
-		);
+		$api = new ApiClient( $this->api );
+		$query = $api->get( [
+			'action'  => 'query',
+			'titles'  => $this->title,
+			'prop'    => 'revisions',
+			'rvprop'  => 'content',
+			'rvlimit' => 1
+		] );
 		$query = $query['query'];
 		if ( array_key_exists( 'pages', $query ) ) {
 			foreach ( $query['pages'] as $pageid => $page ) {
@@ -474,19 +463,17 @@ class Canto extends Orig {
 	 * @return array
 	 */
 	public function getImages() : array {
-		$images = getApi(
-			COMMONS_API,
-			[
-				'action'      => 'query',
-				'prop'        => 'imageinfo',
-				'iiprop'      => 'url',
-				'iiurlwidth'  => IMG_WIDTH,
-				'iiurlheight' => IMG_HEIGHT,
-				'generator'   => 'categorymembers',
-				'gcmtitle'    => $this->commonsCat,
-				'gcmtype'     => 'file'
-			]
-		);
+		$api = new ApiClient( COMMONS_API );
+		$images = $api->get( [
+			'action'      => 'query',
+			'prop'        => 'imageinfo',
+			'iiprop'      => 'url',
+			'iiurlwidth'  => IMG_WIDTH,
+			'iiurlheight' => IMG_HEIGHT,
+			'generator'   => 'categorymembers',
+			'gcmtitle'    => $this->commonsCat,
+			'gcmtype'     => 'file'
+		] );
 		$res = [];
 		if ( array_key_exists( 'query', $images ) ) {
 			$images = $images['query'];

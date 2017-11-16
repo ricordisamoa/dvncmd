@@ -4,6 +4,7 @@ namespace DivineComedy;
 
 require_once 'DivineComedy.php';
 require_once 'DivineComedyView.php';
+require_once 'DivineComedy/ApiClient.php';
 
 ?><!DOCTYPE html>
 <html>
