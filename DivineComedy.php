@@ -98,19 +98,8 @@ abstract class Orig {
 	 */
 	public function getLanglinks() : array {
 		$api = new ApiClient( WS_ORIG_API );
-		$res = $api->get( [
-			'action' => 'query',
-			'formatversion' => 2,
-			'prop' => 'langlinks',
-			'lllimit' => 'max',
-			'titles' => $this->orig
-		] );
-		$res = $res['query']['pages'][0]['langlinks'];
-		$langlinks = [];
-		foreach ( $res as $ll ) {
-			$langlinks[$ll['lang']] = $ll['title'];
-		}
-		return $langlinks;
+		$langlinksProvider = new LanguageLinksProvider( $api );
+		return $langlinksProvider->getLanguageLinks( $this->orig );
 	}
 
 	/**

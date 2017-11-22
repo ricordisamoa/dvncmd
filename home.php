@@ -6,6 +6,7 @@ require_once 'DivineComedy.php';
 require_once 'DivineComedyView.php';
 require_once 'DivineComedy/ApiClient.php';
 require_once 'DivineComedy/CantoImagesProvider.php';
+require_once 'DivineComedy/LanguageLinksProvider.php';
 require_once 'DivineComedy/FlagProvider.php';
 require_once 'DivineComedy/NuvolaFlagProvider.php';
 require_once 'DivineComedy/RawPageTextProvider.php';
