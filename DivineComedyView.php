@@ -77,6 +77,11 @@ class DivineComedyView {
 	private $canto;
 
 	/**
+	 * @var FlagProvider Provider of flag images
+	 */
+	private $flagProvider;
+
+	/**
 	 * @var CantoImagesProvider Provider of Wikimedia Commons images by canto
 	 */
 	private $cantoImagesProvider;
@@ -99,6 +104,8 @@ class DivineComedyView {
 		} else {
 			$this->lang = WS_ORIG_LANG;
 		}
+
+		$this->flagProvider = new NuvolaFlagProvider();
 
 		$commonsApiClient = new ApiClient( self::COMMONS_API );
 		$this->cantoImagesProvider = new CantoImagesProvider( $commonsApiClient );
@@ -240,7 +247,29 @@ class DivineComedyView {
 	 * @return string HTML
 	 */
 	public function getLanglinkFlags() : string {
-		return $this->canto->getLanglinkFlags( $this->query );
+		$lls = $this->canto->getLanglinksForPresentation();
+		$ret = '<div id="langlinks-right">';
+		foreach ( array_keys( $lls ) as $i => $llang ) {
+			$ltitle = $lls[$llang];
+			$ret .= '<a target="_self" href="' .
+				( $llang === WS_ORIG_LANG ? '' : ( '/' . $llang ) ) .
+				"/{$this->query}\" title=\"$ltitle\">";
+			$flag = $this->flagProvider->getFlag( $llang );
+			if ( $flag !== null ) {
+				$ret .= '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/' .
+					$flag . '" alt="' . $ltitle . '">';
+			} else {
+				$ret .= $ltitle;
+			}
+			$ret .= '</a>';
+			if ( $i == intval( count( $lls ) / 2 ) ) {
+				$ret .= '</div><div id="langlinks-left">';
+			} elseif ( $i < count( $lls ) - 1 ) {
+				$ret .= '<br>';
+			}
+		}
+		$ret .= '</div>';
+		return $ret;
 	}
 
 }

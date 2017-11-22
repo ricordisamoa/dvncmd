@@ -114,41 +114,17 @@ abstract class Orig {
 	}
 
 	/**
-	 * Get the langlink flags.
+	 * Get the language links used for views.
 	 *
-	 * @param string $query The raw query
-	 * @return string HTML
+	 * @return array Keys are language codes, values are page titles
 	 */
-	public function getLanglinkFlags( string $query ) : string {
+	public function getLanglinksForPresentation() : array {
 		$lls = $this->getLanglinks();
 		$lls[WS_ORIG_LANG] = $this->orig;
 		unset( $lls['fr'] ); // the French version is in prose
 		unset( $lls[$this->lang] ); // do not show links to current language
 		ksort( $lls ); // sort by language code
-
-		$ret = '<div id="langlinks-right">';
-		foreach ( array_keys( $lls ) as $i => $llang ) {
-			$ltitle = $lls[$llang];
-			$ret .= '<a target="_self" href="' .
-				( $llang === WS_ORIG_LANG ? '' : ( '/' . $llang ) ) .
-				"/$query\" title=\"$ltitle\">";
-			$flagProvider = new NuvolaFlagProvider();
-			$flag = $flagProvider->getFlag( $llang );
-			if ( $flag !== null ) {
-				$ret .= '<img height="70" src="//commons.wikimedia.org/wiki/Special:Filepath/' .
-					$flag . '" alt="' . $ltitle . '">';
-			} else {
-				$ret .= $ltitle;
-			}
-			$ret .= '</a>';
-			if ( $i == intval( count( $lls ) / 2 ) ) {
-				$ret .= '</div><div id="langlinks-left">';
-			} elseif ( $i < count( $lls ) - 1 ) {
-				$ret .= '<br>';
-			}
-		}
-		$ret .= '</div>';
-		return $ret;
+		return $lls;
 	}
 
 }
