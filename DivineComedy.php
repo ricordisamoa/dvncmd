@@ -68,60 +68,10 @@ class DivineComedyException extends \Exception {
 }
 
 /**
- * A simple class representing a Wikisource page in original language (Italian)
- *
- * It is supposed to be extended by Cantica and Canto.
- */
-abstract class Orig {
-
-	/**
-	 * @var string The title of the page in original language
-	 */
-	protected $orig;
-
-	/**
-	 * @var string The language code of the page
-	 */
-	protected $lang = 'it';
-
-	/**
-	 * @param string $orig The title of the page in original language
-	 */
-	public function __construct( string $orig ) {
-		$this->orig = $orig;
-	}
-
-	/**
-	 * Get the language links.
-	 *
-	 * @return array Keys are language codes, values are page titles
-	 */
-	public function getLanglinks() : array {
-		$api = new ApiClient( WS_ORIG_API );
-		$langlinksProvider = new LanguageLinksProvider( $api );
-		return $langlinksProvider->getLanguageLinks( $this->orig );
-	}
-
-	/**
-	 * Get the language links used for views.
-	 *
-	 * @return array Keys are language codes, values are page titles
-	 */
-	public function getLanglinksForPresentation() : array {
-		$lls = $this->getLanglinks();
-		$lls[WS_ORIG_LANG] = $this->orig;
-		unset( $lls['fr'] ); // the French version is in prose
-		unset( $lls[$this->lang] ); // do not show links to current language
-		ksort( $lls ); // sort by language code
-		return $lls;
-	}
-
-}
-
-/**
  * A wrapper class to obtain a specific Canto instance
  */
-class Cantica extends Orig {
+class Cantica {
+
 	public static $names = [
 		'i' => 'Inferno',
 		'p' => 'Purgatorio',
@@ -132,6 +82,11 @@ class Cantica extends Orig {
 	 * @var string The name of the cantica
 	 */
 	private $name;
+
+	/**
+	 * @var string The language code of the cantica
+	 */
+	private $lang;
 
 	/**
 	 * @param string $name The name of the cantica
@@ -177,7 +132,7 @@ class Cantica extends Orig {
  *
  * Should be instantiated by Cantica only.
  */
-class Canto extends Orig {
+class Canto {
 
 	/**
 	 * @var string The name of the cantica
@@ -188,6 +143,16 @@ class Canto extends Orig {
 	 * @var int The number of the canto
 	 */
 	private $num;
+
+	/**
+	 * @var string The language code of the canto
+	 */
+	private $lang;
+
+	/**
+	 * @var string The title of the Wikisource page in original language
+	 */
+	private $orig;
 
 	/**
 	 * @var string The URL of the API endpoint of the localized Wikisource edition
@@ -214,7 +179,7 @@ class Canto extends Orig {
 		$this->num = $num;
 		$this->lang = $lang;
 
-		parent::__construct( sprintf( WS_ORIG_PAGE_PATH, $this->cantica, romanize( $num ) ) );
+		$this->orig = sprintf( WS_ORIG_PAGE_PATH, $this->cantica, romanize( $num ) );
 		$this->api = sprintf( WS_API, $this->lang );
 
 		if ( $this->lang === WS_ORIG_LANG ) {
@@ -271,6 +236,31 @@ class Canto extends Orig {
 	 */
 	public function getUrl() : string {
 		return $this->url;
+	}
+
+	/**
+	 * Get the language links.
+	 *
+	 * @return array Keys are language codes, values are page titles
+	 */
+	public function getLanglinks() : array {
+		$api = new ApiClient( WS_ORIG_API );
+		$langlinksProvider = new LanguageLinksProvider( $api );
+		return $langlinksProvider->getLanguageLinks( $this->orig );
+	}
+
+	/**
+	 * Get the language links used for views.
+	 *
+	 * @return array Keys are language codes, values are page titles
+	 */
+	public function getLanglinksForPresentation() : array {
+		$lls = $this->getLanglinks();
+		$lls[WS_ORIG_LANG] = $this->orig;
+		unset( $lls['fr'] ); // the French version is in prose
+		unset( $lls[$this->lang] ); // do not show links to current language
+		ksort( $lls ); // sort by language code
+		return $lls;
 	}
 
 	/**
