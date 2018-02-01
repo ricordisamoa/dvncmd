@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable Generic.Files.OneObjectStructurePerFile,MediaWiki.Files.ClassMatchesFilename
 
 /**
  * Divine Comedy link shortener - dvncmd.tk
