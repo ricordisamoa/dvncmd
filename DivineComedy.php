@@ -93,7 +93,7 @@ class Cantica {
 	 * @param string $name The name of the cantica
 	 * @param string $lang The language code of the cantica
 	 */
-	public function __construct( string $name, string $lang = WS_ORIG_LANG ) {
+	public function __construct( string $name, string $lang ) {
 		$this->name = $name;
 		$this->lang = $lang;
 	}
@@ -175,7 +175,7 @@ class Canto {
 	 * @param int $num The number of the canto
 	 * @param string $lang The language code of the canto
 	 */
-	public function __construct( string $cantica, int $num, string $lang = WS_ORIG_LANG ) {
+	public function __construct( string $cantica, int $num, string $lang ) {
 		$this->cantica = $cantica;
 		$this->num = $num;
 		$this->lang = $lang;

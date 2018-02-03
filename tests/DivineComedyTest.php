@@ -14,7 +14,7 @@ require_once './DivineComedy/RussianTextCleaner.php';
 class DivineComedyTest extends \PHPUnit\Framework\TestCase {
 
 	public function testNumberOfLinesItalian() {
-		$inferno = new Cantica( 'Inferno' );
+		$inferno = new Cantica( 'Inferno', 'it' );
 		$inferno18 = $inferno->getCanto( 18 );
 		$this->assertSame( count( $inferno18->getLines() ), 136 );
 	}
@@ -27,7 +27,7 @@ class DivineComedyTest extends \PHPUnit\Framework\TestCase {
 	}
 
 	public function testItalian() {
-		$inferno = new Cantica( 'Inferno' );
+		$inferno = new Cantica( 'Inferno', 'it' );
 		$first_canto = $inferno->getCanto( 1 );
 		$result = $first_canto->getLines( 1, 3 );
 		$expected = [
