@@ -20,19 +20,11 @@
  * The license file can be found at COPYING.txt (in this directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2017 Ricordisamoa
+ * @copyright 2012-2018 Ricordisamoa
  * @license   https://www.gnu.org/licenses/agpl-3.0.html  GNU Affero GPL
  */
 
 namespace DivineComedy;
-
-// {{{ constants
-define( 'WS_API', 'http://%s.wikisource.org/w/api.php' );
-define( 'WS_PATH', 'http://%s.wikisource.org/wiki/%s' );
-define( 'WS_ORIG_LANG', 'it' );
-define( 'WS_ORIG_API', sprintf( WS_API, WS_ORIG_LANG ) );
-define( 'WS_ORIG_PAGE_PATH', 'Divina Commedia/%s/Canto %s' );
-// }}}
 
 /**
  * Convert an integer into a Roman numeral
@@ -135,6 +127,10 @@ class Cantica {
  */
 class Canto {
 
+	const WIKISOURCE_API = 'http://%s.wikisource.org/w/api.php';
+
+	const ORIGINAL_LANG = 'it';
+
 	/**
 	 * @var string The name of the cantica
 	 */
@@ -180,17 +176,19 @@ class Canto {
 		$this->num = $num;
 		$this->lang = $lang;
 
-		$this->orig = sprintf( WS_ORIG_PAGE_PATH, $this->cantica, romanize( $num ) );
-		$this->api = sprintf( WS_API, $this->lang );
+		$this->orig = sprintf( 'Divina Commedia/%s/Canto %s', $this->cantica, romanize( $num ) );
+		$this->api = sprintf( self::WIKISOURCE_API, $this->lang );
 
-		if ( $this->lang === WS_ORIG_LANG ) {
+		if ( $this->lang === self::ORIGINAL_LANG ) {
 			$this->title = $this->orig;
 		} else {
 			$lls = $this->getLanglinks();
 			$this->title = $lls[$this->lang];
 		}
 		$this->url = sprintf(
-			WS_PATH, $this->lang, implode(
+			'http://%s.wikisource.org/wiki/%s',
+			$this->lang,
+			implode(
 				'/', array_map( 'rawurlencode', explode( '/', str_replace( ' ', '_', $this->title ) ) )
 			)
 		);
@@ -245,7 +243,7 @@ class Canto {
 	 * @return array Keys are language codes, values are page titles
 	 */
 	public function getLanglinks() : array {
-		$api = new ApiClient( WS_ORIG_API );
+		$api = new ApiClient( sprintf( self::WIKISOURCE_API, self::ORIGINAL_LANG ) );
 		$langlinksProvider = new LanguageLinksProvider( $api );
 		return $langlinksProvider->getLanguageLinks( $this->orig );
 	}
@@ -257,7 +255,7 @@ class Canto {
 	 */
 	public function getLanglinksForPresentation() : array {
 		$lls = $this->getLanglinks();
-		$lls[WS_ORIG_LANG] = $this->orig;
+		$lls[self::ORIGINAL_LANG] = $this->orig;
 		unset( $lls['fr'] ); // the French version is in prose
 		unset( $lls[$this->lang] ); // do not show links to current language
 		ksort( $lls ); // sort by language code

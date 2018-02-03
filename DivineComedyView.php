@@ -19,7 +19,7 @@
  * The license file can be found at COPYING.txt (in this directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2017 Ricordisamoa
+ * @copyright 2012-2018 Ricordisamoa
  * @license   https://www.gnu.org/licenses/agpl-3.0.html  GNU Affero GPL
  */
 
@@ -33,6 +33,8 @@ class DivineComedyView {
 
 	const IMG_WIDTH = 1600;
 	const IMG_HEIGHT = 160;
+
+	const DEFAULT_LANG = 'it';
 
 	private static $titles = [
 		'ca' => 'La Divina Comèdia',
@@ -102,7 +104,7 @@ class DivineComedyView {
 		if ( isset( $params['lang'] ) && $params['lang'] !== '' ) {
 			$this->lang = $params['lang'];
 		} else {
-			$this->lang = WS_ORIG_LANG;
+			$this->lang = self::DEFAULT_LANG;
 		}
 
 		$this->flagProvider = new NuvolaFlagProvider();
@@ -252,7 +254,7 @@ class DivineComedyView {
 		foreach ( array_keys( $lls ) as $i => $llang ) {
 			$ltitle = $lls[$llang];
 			$ret .= '<a target="_self" href="' .
-				( $llang === WS_ORIG_LANG ? '' : ( '/' . $llang ) ) .
+				( $llang === self::DEFAULT_LANG ? '' : ( '/' . $llang ) ) .
 				"/{$this->query}\" title=\"$ltitle\">";
 			$flag = $this->flagProvider->getFlag( $llang );
 			if ( $flag !== null ) {
