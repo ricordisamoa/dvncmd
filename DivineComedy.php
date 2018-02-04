@@ -27,34 +27,6 @@
 namespace DivineComedy;
 
 /**
- * Convert an integer into a Roman numeral
- *
- * @param int $num the number to convert
- *
- * @return string the romanized number
- *
- * @author    Steven Levithan
- * @author    Ricordisamoa
- * @copyright 2008 Steven Levithan, 2012 Ricordisamoa
- * @license   http://opensource.org/licenses/MIT  MIT License
- */
-function romanize( int $num ) : string {
-	$digits = str_split( strval( $num ) );
-	$key = [
-		'', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM',
-		'', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC',
-		'', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'
-	];
-	$roman = '';
-	$i = 3;
-	while ( $i-- ) {
-		$f = intval( array_pop( $digits ) ) + ( $i * 10 );
-		$roman = ( array_key_exists( $f, $key ) ? $key[$f] : '' ) . $roman;
-	}
-	return implode( array_fill( 0, intval( implode( $digits, '' ) ) + 1, '' ), 'M' ) . $roman;
-}
-
-/**
  * Base class for all DivineComedy exceptions.
  */
 class DivineComedyException extends \Exception {
@@ -167,6 +139,34 @@ class Canto {
 	private $url;
 
 	/**
+	 * Convert an integer into a Roman numeral
+	 *
+	 * @param int $num the number to convert
+	 *
+	 * @return string the romanized number
+	 *
+	 * @author    Steven Levithan
+	 * @author    Ricordisamoa
+	 * @copyright 2008 Steven Levithan, 2012 Ricordisamoa
+	 * @license   http://opensource.org/licenses/MIT  MIT License
+	 */
+	private static function romanize( int $num ) : string {
+		$digits = str_split( strval( $num ) );
+		$key = [
+			'', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM',
+			'', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC',
+			'', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'
+		];
+		$roman = '';
+		$i = 3;
+		while ( $i-- ) {
+			$f = intval( array_pop( $digits ) ) + ( $i * 10 );
+			$roman = ( array_key_exists( $f, $key ) ? $key[$f] : '' ) . $roman;
+		}
+		return implode( array_fill( 0, intval( implode( $digits, '' ) ) + 1, '' ), 'M' ) . $roman;
+	}
+
+	/**
 	 * @param string $cantica The name of the cantica
 	 * @param int $num The number of the canto
 	 * @param string $lang The language code of the canto
@@ -176,7 +176,7 @@ class Canto {
 		$this->num = $num;
 		$this->lang = $lang;
 
-		$this->orig = sprintf( 'Divina Commedia/%s/Canto %s', $this->cantica, romanize( $num ) );
+		$this->orig = sprintf( 'Divina Commedia/%s/Canto %s', $this->cantica, self::romanize( $num ) );
 		$this->api = sprintf( self::WIKISOURCE_API, $this->lang );
 
 		if ( $this->lang === self::ORIGINAL_LANG ) {
