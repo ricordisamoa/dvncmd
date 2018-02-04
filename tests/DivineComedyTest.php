@@ -3,13 +3,6 @@
 namespace DivineComedy;
 
 require_once './DivineComedy.php';
-require_once './DivineComedy/ApiClient.php';
-require_once './DivineComedy/LanguageLinksProvider.php';
-require_once './DivineComedy/RawPageTextProvider.php';
-require_once './DivineComedy/TextCleaner.php';
-require_once './DivineComedy/BasicTextCleaner.php';
-require_once './DivineComedy/LatinTextCleaner.php';
-require_once './DivineComedy/RussianTextCleaner.php';
 
 class DivineComedyTest extends \PHPUnit\Framework\TestCase {
 

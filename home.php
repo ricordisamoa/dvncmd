@@ -2,18 +2,9 @@
 
 namespace DivineComedy;
 
+require_once 'vendor/autoload.php';
 require_once 'DivineComedy.php';
 require_once 'DivineComedyView.php';
-require_once 'DivineComedy/ApiClient.php';
-require_once 'DivineComedy/CantoImagesProvider.php';
-require_once 'DivineComedy/LanguageLinksProvider.php';
-require_once 'DivineComedy/FlagProvider.php';
-require_once 'DivineComedy/NuvolaFlagProvider.php';
-require_once 'DivineComedy/RawPageTextProvider.php';
-require_once 'DivineComedy/TextCleaner.php';
-require_once 'DivineComedy/BasicTextCleaner.php';
-require_once 'DivineComedy/LatinTextCleaner.php';
-require_once 'DivineComedy/RussianTextCleaner.php';
 
 ?><!DOCTYPE html>
 <html>

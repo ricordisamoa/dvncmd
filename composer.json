@@ -6,6 +6,11 @@
 		"mediawiki/mediawiki-codesniffer": "15.0.0",
 		"phpunit/phpunit": "6.5.2"
 	},
+	"autoload": {
+		"psr-4": {
+			"DivineComedy\\": "DivineComedy/"
+		}
+	},
 	"scripts": {
 		"test": [
 			"phpcs",
