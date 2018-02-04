@@ -2,8 +2,6 @@
 
 namespace DivineComedy;
 
-require_once './DivineComedy.php';
-
 class DivineComedyTest extends \PHPUnit\Framework\TestCase {
 
 	public function testNumberOfLinesItalian() {
