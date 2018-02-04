@@ -3,7 +3,6 @@
 namespace DivineComedy;
 
 require_once 'vendor/autoload.php';
-require_once 'DivineComedyView.php';
 
 ?><!DOCTYPE html>
 <html>

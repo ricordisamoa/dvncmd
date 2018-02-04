@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The license file can be found at COPYING.txt (in this directory).
+ * The license file can be found at COPYING.txt (in the parent directory).
  *
  * @author    Ricordisamoa
  * @copyright 2012-2018 Ricordisamoa
