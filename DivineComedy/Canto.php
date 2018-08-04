@@ -201,8 +201,8 @@ class Canto {
 	/**
 	 * Get the cleaned-up content of the current Canto, in form of lines.
 	 *
-	 * @param int $begin The starting line
-	 * @param int $end The ending line
+	 * @param int|null $begin The starting line
+	 * @param int|null $end The ending line
 	 * @return string[]
 	 */
 	public function getLines( int $begin = null, int $end = null ) : array {
