@@ -20,7 +20,7 @@
  *
  * @author    Ricordisamoa
  * @copyright 2012-2017 Ricordisamoa
- * @license   https://www.gnu.org/licenses/agpl-3.0.html  GNU Affero GPL
+ * @license   AGPL-3.0-or-later
  */
 
 namespace DivineComedy;
