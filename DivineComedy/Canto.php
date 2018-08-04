@@ -72,31 +72,14 @@ class Canto {
 	private $url;
 
 	/**
-	 * Convert an integer into a Roman numeral
+	 * Convert an integer between 1 and 39 (inclusive) into a Roman numeral.
 	 *
-	 * @param int $num the number to convert
-	 *
-	 * @return string the romanized number
-	 *
-	 * @author    Steven Levithan
-	 * @author    Ricordisamoa
-	 * @copyright 2008 Steven Levithan, 2012 Ricordisamoa
-	 * @license   http://opensource.org/licenses/MIT  MIT License
+	 * @param int $num The number to convert
+	 * @return string The romanized number
 	 */
 	private static function romanize( int $num ) : string {
-		$digits = str_split( strval( $num ) );
-		$key = [
-			'', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM',
-			'', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC',
-			'', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'
-		];
-		$roman = '';
-		$i = 3;
-		while ( $i-- ) {
-			$f = intval( array_pop( $digits ) ) + ( $i * 10 );
-			$roman = ( array_key_exists( $f, $key ) ? $key[$f] : '' ) . $roman;
-		}
-		return implode( array_fill( 0, intval( implode( $digits, '' ) ) + 1, '' ), 'M' ) . $roman;
+		return str_repeat( 'X', intdiv( $num, 10 ) ) .
+			[ '', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX' ][$num % 10];
 	}
 
 	/**
