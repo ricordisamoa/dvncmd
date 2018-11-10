@@ -19,7 +19,7 @@
  * The license file can be found at COPYING.txt (in the parent directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2017 Ricordisamoa
+ * @copyright 2012-2018 Ricordisamoa
  * @license   AGPL-3.0-or-later
  */
 
@@ -62,11 +62,12 @@ class FlatFlagProvider implements FlagProvider {
 	/**
 	 * @inheritDoc
 	 */
-	public function getFlag( string $lang ) {
+	public function getFlag( string $lang ) : ?string {
 		if ( isset( self::$flagLangs[$lang] ) ) {
 			$flag = sprintf( self::$flagFormat, self::$flagLangs[$lang] );
 			return str_replace( ' ', '_', $flag );
 		}
+		return null;
 	}
 
 }

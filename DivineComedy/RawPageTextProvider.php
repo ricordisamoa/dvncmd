@@ -19,7 +19,7 @@
  * The license file can be found at COPYING.txt (in the parent directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2017 Ricordisamoa
+ * @copyright 2012-2018 Ricordisamoa
  * @license   AGPL-3.0-or-later
  */
 
@@ -48,7 +48,7 @@ class RawPageTextProvider {
 	 * @param string $title The title of the page to get the text for
 	 * @return string|null The raw text of the page, null if not found
 	 */
-	public function getRawPageText( string $title ) {
+	public function getRawPageText( string $title ) : ?string {
 		$query = $this->api->get( [
 			'action'  => 'query',
 			'titles'  => $title,
@@ -62,10 +62,11 @@ class RawPageTextProvider {
 				if ( array_key_exists( 'revisions', $page ) ) {
 					return $page['revisions'][0]['*'];
 				} else {
-					return;
+					return null;
 				}
 			}
 		}
+		return null;
 	}
 
 }

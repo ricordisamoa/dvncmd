@@ -183,7 +183,7 @@ class Canto {
 	 *
 	 * @return string|null
 	 */
-	private function getContent() {
+	private function getContent() : ?string {
 		$api = new ApiClient( $this->api );
 		$textProvider = new RawPageTextProvider( $api );
 		return $textProvider->getRawPageText( $this->title );

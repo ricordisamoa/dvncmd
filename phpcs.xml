@@ -3,6 +3,7 @@
 	<rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki">
 		<exclude name="MediaWiki.Commenting.MissingCovers.MissingCovers" />
 		<exclude name="MediaWiki.PHP70Features.ScalarTypeHintUsage" />
+		<exclude name="MediaWiki.PHP71Features.NullableType" />
 		<exclude name="MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment" />
 	</rule>
 	<file>.</file>
