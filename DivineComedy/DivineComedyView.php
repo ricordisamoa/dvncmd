@@ -188,7 +188,7 @@ class DivineComedyView {
 	/**
 	 * Parse the query.
 	 */
-	public function parseQuery() {
+	public function parseQuery() : void {
 		$parts = explode( ',', $this->query );
 
 		$this->cantica = $this->parseCantica( substr( $parts[0], 0, 1 ) );

@@ -9,7 +9,7 @@ require_once 'vendor/autoload.php';
 <!--
 Divine Comedy link shortener - dvncmd.tk
 
-Copyright © 2012-2017 by Ricordisamoa
+Copyright © 2012-2018 by Ricordisamoa
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -45,7 +45,7 @@ if ( !$view->isViewMode() ) {
 <body>
 <?php
 
-function reportError( \Exception $err ) {
+function reportError( \Exception $err ) : void {
 	echo 'Error: ' . htmlspecialchars( $err->getMessage() );
 }
 

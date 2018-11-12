@@ -4,20 +4,20 @@ namespace DivineComedy;
 
 class DivineComedyTest extends \PHPUnit\Framework\TestCase {
 
-	public function testNumberOfLinesItalian() {
+	public function testNumberOfLinesItalian() : void {
 		$inferno = new Cantica( 'Inferno', 'it' );
 		$inferno18 = $inferno->getCanto( 18 );
 		$this->assertSame( count( $inferno18->getLines() ), 136 );
 	}
 
-	public function testNumberOfLinesEnglish() {
+	public function testNumberOfLinesEnglish() : void {
 		$this->markTestSkipped( 'not working' );
 		$paradise = new Cantica( 'Paradiso', 'en' );
 		$paradise3 = $paradise->getCanto( 3 );
 		$this->assertSame( count( $paradise3->getLines() ), 130 );
 	}
 
-	public function testItalian() {
+	public function testItalian() : void {
 		$inferno = new Cantica( 'Inferno', 'it' );
 		$first_canto = $inferno->getCanto( 1 );
 		$result = $first_canto->getLines( 1, 3 );
@@ -29,7 +29,7 @@ class DivineComedyTest extends \PHPUnit\Framework\TestCase {
 		$this->assertSame( $result, $expected );
 	}
 
-	public function testEnglish() {
+	public function testEnglish() : void {
 		$this->markTestSkipped( 'not working' );
 		$inferno = new Cantica( 'Inferno', 'en' );
 		$first_canto = $inferno->getCanto( 1 );
@@ -42,7 +42,7 @@ class DivineComedyTest extends \PHPUnit\Framework\TestCase {
 		$this->assertSame( $result, $expected );
 	}
 
-	public function testLatin() {
+	public function testLatin() : void {
 		$inferno = new Cantica( 'Inferno', 'la' );
 		$first_canto = $inferno->getCanto( 1 );
 		$result = $first_canto->getLines( 12, 16 );
@@ -56,7 +56,7 @@ class DivineComedyTest extends \PHPUnit\Framework\TestCase {
 		$this->assertSame( $result, $expected );
 	}
 
-	public function testRussian() {
+	public function testRussian() : void {
 		$purgatorio = new Cantica( 'Purgatorio', 'ru' );
 		$second_canto = $purgatorio->getCanto( 2 );
 		$result = $second_canto->getLines( 7, 9 );
