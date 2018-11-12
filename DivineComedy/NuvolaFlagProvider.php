@@ -30,15 +30,9 @@ namespace DivineComedy;
  */
 class NuvolaFlagProvider implements FlagProvider {
 
-	/**
-	 * @var string
-	 */
-	private static $flagFormat = 'Nuvola %s flag.svg';
+	private const FLAG_FORMAT = 'Nuvola %s flag.svg';
 
-	/**
-	 * @var array
-	 */
-	private static $flagLangs = [
+	private const FLAG_LANGS = [
 		'ca' => 'Catalonia',
 		'cs' => 'Czech',
 		'de' => 'German',
@@ -63,8 +57,8 @@ class NuvolaFlagProvider implements FlagProvider {
 	 * @inheritDoc
 	 */
 	public function getFlag( string $lang ) : ?string {
-		if ( isset( self::$flagLangs[$lang] ) ) {
-			$flag = sprintf( self::$flagFormat, self::$flagLangs[$lang] );
+		if ( isset( self::FLAG_LANGS[$lang] ) ) {
+			$flag = sprintf( self::FLAG_FORMAT, self::FLAG_LANGS[$lang] );
 			return str_replace( ' ', '_', $flag );
 		}
 		return null;

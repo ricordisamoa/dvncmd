@@ -19,7 +19,7 @@
  * The license file can be found at COPYING.txt (in the parent directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2017 Ricordisamoa
+ * @copyright 2012-2018 Ricordisamoa
  * @license   AGPL-3.0-or-later
  */
 
@@ -30,7 +30,7 @@ namespace DivineComedy;
  */
 class BasicTextCleaner implements TextCleaner {
 
-	private static $cleanings = [
+	private const CLEANINGS = [
 		// get only text in "<poem>" tags
 		'/(^[\s\S]*<poem>[\s\n\r]*|[\s\n\r]*<\/poem>[\s\S]*$)/i' => '',
 
@@ -66,7 +66,7 @@ class BasicTextCleaner implements TextCleaner {
 	 */
 	public function getCleanText( string $text ) : string {
 		// TODO: is preg_replace() with arrays faster?
-		foreach ( self::$cleanings as $from => $to ) {
+		foreach ( self::CLEANINGS as $from => $to ) {
 			$text = preg_replace( $from, $to, $text );
 		}
 

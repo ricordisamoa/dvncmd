@@ -36,7 +36,7 @@ class DivineComedyView {
 
 	const DEFAULT_LANG = 'it';
 
-	private static $titles = [
+	private const TITLES = [
 		'ca' => 'La Divina Comèdia',
 		'cs' => 'Božská komedie',
 		'el' => 'Θεία Κωμωδία',
@@ -53,7 +53,7 @@ class DivineComedyView {
 		'sl' => 'Božanska komedija'
 	];
 
-	private static $sectionTitles = [
+	private const SECTION_TITLES = [
 		'en' => '{0, plural, one {{1}, canto {2}, line {3}} other {{1}, canto {2}, lines {3}-{4}}}',
 		'it' => '{0, plural, one {{1}, canto {2}, verso {3}} other {{1}, canto {2}, versi {3}-{4}}}'
 	];
@@ -128,7 +128,7 @@ class DivineComedyView {
 	 * @return string
 	 */
 	public function getHeading() : string {
-		return self::$titles[$this->lang] ?? self::$titles['en'];
+		return self::TITLES[$this->lang] ?? self::TITLES['en'];
 	}
 
 	/**
@@ -204,12 +204,12 @@ class DivineComedyView {
 	 * @return MessageFormatter ICU message formatter
 	 */
 	private function getSectionTitleMessageFormatter() : MessageFormatter {
-		if ( isset( self::$sectionTitles[$this->lang] ) ) {
+		if ( isset( self::SECTION_TITLES[$this->lang] ) ) {
 			$lang = $this->lang;
 		} else {
 			$lang = 'en';
 		}
-		return new MessageFormatter( $lang, self::$sectionTitles[$lang] );
+		return new MessageFormatter( $lang, self::SECTION_TITLES[$lang] );
 	}
 
 	/**
