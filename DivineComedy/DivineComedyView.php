@@ -29,12 +29,12 @@ use MessageFormatter;
 
 class DivineComedyView {
 
-	const COMMONS_API = 'http://commons.wikimedia.org/w/api.php';
+	private const COMMONS_API = 'http://commons.wikimedia.org/w/api.php';
 
-	const IMG_WIDTH = 1600;
-	const IMG_HEIGHT = 160;
+	private const IMG_WIDTH = 1600;
+	private const IMG_HEIGHT = 160;
 
-	const DEFAULT_LANG = 'it';
+	private const DEFAULT_LANG = 'it';
 
 	private const TITLES = [
 		'ca' => 'La Divina Comèdia',

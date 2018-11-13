@@ -19,7 +19,7 @@
  * The license file can be found at COPYING.txt (in the parent directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2017 Ricordisamoa
+ * @copyright 2012-2018 Ricordisamoa
  * @license   AGPL-3.0-or-later
  */
 
@@ -30,7 +30,7 @@ namespace DivineComedy;
  */
 class CantoImagesProvider {
 
-	const COMMONS_CAT_PATH = 'Category:%s Canto %02d';
+	private const COMMONS_CAT_PATH = 'Category:%s Canto %02d';
 
 	/**
 	 * @var ApiClient Wikimedia Commons API wrapper

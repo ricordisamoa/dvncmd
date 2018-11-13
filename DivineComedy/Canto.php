@@ -32,9 +32,9 @@ namespace DivineComedy;
  */
 class Canto {
 
-	const WIKISOURCE_API = 'http://%s.wikisource.org/w/api.php';
+	private const WIKISOURCE_API = 'http://%s.wikisource.org/w/api.php';
 
-	const ORIGINAL_LANG = 'it';
+	private const ORIGINAL_LANG = 'it';
 
 	/**
 	 * @var string The name of the cantica
