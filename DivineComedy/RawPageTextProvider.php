@@ -43,17 +43,18 @@ class RawPageTextProvider {
 	}
 
 	/**
-	 * Get the raw text of a page.
+	 * Get the raw text of a page, following redirects.
 	 *
 	 * @param string $title The title of the page to get the text for
 	 * @return string|null The raw text of the page, null if not found
 	 */
 	public function getRawPageText( string $title ) : ?string {
 		$query = $this->api->get( [
-			'action'  => 'query',
-			'titles'  => $title,
-			'prop'    => 'revisions',
-			'rvprop'  => 'content',
+			'action' => 'query',
+			'titles' => $title,
+			'redirects' => '',
+			'prop' => 'revisions',
+			'rvprop' => 'content',
 			'rvlimit' => 1
 		] );
 		$query = $query['query'];
