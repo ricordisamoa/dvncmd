@@ -1,6 +1,4 @@
-dist: trusty
-sudo: false
-group: beta
+dist: bionic
 language: php
 php:
   - 7.1
