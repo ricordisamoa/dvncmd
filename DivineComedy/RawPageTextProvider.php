@@ -19,7 +19,7 @@
  * The license file can be found at COPYING.txt (in the parent directory).
  *
  * @author    Ricordisamoa
- * @copyright 2012-2018 Ricordisamoa
+ * @copyright 2012-2019 Ricordisamoa
  * @license   AGPL-3.0-or-later
  */
 
