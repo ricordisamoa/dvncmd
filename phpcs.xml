@@ -2,12 +2,10 @@
 <ruleset name="dvncmd">
 	<rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki">
 		<exclude name="MediaWiki.Commenting.MissingCovers.MissingCovers" />
-		<exclude name="MediaWiki.PHP70Features.ScalarTypeHintUsage" />
-		<exclude name="MediaWiki.PHP71Features.NullableType" />
-		<exclude name="MediaWiki.PHP71Features.VoidReturnType" />
 		<exclude name="MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment" />
 	</rule>
 	<file>.</file>
+	<arg name="extensions" value="php" />
 	<exclude-pattern>vendor/</exclude-pattern>
 	<exclude-pattern>home.php</exclude-pattern>
 </ruleset>
