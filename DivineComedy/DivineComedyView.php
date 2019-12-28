@@ -228,7 +228,7 @@ class DivineComedyView {
 			$this->versi[0],
 			$this->versi[1]
 		] ) );
-		$lines = implode( array_map( 'htmlspecialchars', $lines ), '<br>' );
+		$lines = implode( '<br>', array_map( 'htmlspecialchars', $lines ) );
 		$cantoUrl = htmlspecialchars( $this->canto->getUrl() );
 
 		$res .= "<section><h2>$sectionTitle</h2><blockquote>$lines</blockquote>" .
