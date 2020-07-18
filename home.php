@@ -4,6 +4,8 @@ namespace DivineComedy;
 
 require_once 'vendor/autoload.php';
 
+// phpcs:disable Generic.Files.LineLength.TooLong
+
 ?><!DOCTYPE html>
 <html>
 <!--
@@ -35,6 +37,7 @@ The license file can be found at COPYING.txt (in this directory).
 <link href="//upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Dante_icon.png/32px-Dante_icon.png" rel="shortcut icon" type="image/png">
 <?php
 
+// phpcs:ignore MediaWiki.Usage.SuperGlobalsUsage.SuperGlobals
 $view = new DivineComedyView( $_GET );
 
 if ( !$view->isViewMode() ) {
@@ -45,6 +48,11 @@ if ( !$view->isViewMode() ) {
 <body>
 <?php
 
+/**
+ * Show an error message to the user.
+ *
+ * @param \Exception $err The exception object from which the message is retrieved
+ */
 function reportError( \Exception $err ) : void {
 	echo 'Error: ' . htmlspecialchars( $err->getMessage() );
 }
