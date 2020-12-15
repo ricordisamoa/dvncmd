@@ -3,8 +3,8 @@
 		"php": "^7.2"
 	},
 	"require-dev": {
-		"mediawiki/mediawiki-codesniffer": "31.0.0",
-		"phpunit/phpunit": "8.5.8"
+		"mediawiki/mediawiki-codesniffer": "34.0.0",
+		"phpunit/phpunit": "8.5.13"
 	},
 	"autoload": {
 		"psr-4": {

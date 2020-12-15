@@ -30,6 +30,9 @@ namespace DivineComedy;
  */
 class Cantica {
 
+	/**
+	 * @var array Map of cantica codes to the respective names
+	 */
 	public static $names = [
 		'i' => 'Inferno',
 		'p' => 'Purgatorio',
