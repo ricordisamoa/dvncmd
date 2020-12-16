@@ -1,9 +1,12 @@
 dist: focal
 language: php
-php:
-  - 7.2
-  - 7.3
-  - 7.4
-  - 8.0
+jobs:
+  include:
+  - php: 7.2
+    dist: bionic
+  - php: 7.3
+    dist: bionic
+  - php: 7.4
+  - php: 8.0
 before_script: composer install
 script: composer test
