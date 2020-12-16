@@ -1,6 +1,6 @@
 # Divine Comedy link shortener
 
-[![Build Status](https://travis-ci.org/ricordisamoa/dvncmd.svg?branch=master)](https://travis-ci.org/ricordisamoa/dvncmd)
+[![Build Status](https://travis-ci.com/ricordisamoa/dvncmd.svg?branch=master)](https://travis-ci.com/ricordisamoa/dvncmd)
 
 ### Features
 * uses interwiki links to detect translations
